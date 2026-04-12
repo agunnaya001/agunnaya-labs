@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Agunnaya Labs — AI + Web3 Autonomous Ecosystem</title>
+<meta name="description" content="Full-stack Web3 platform combining AI-powered smart contract security, on-chain blockchain gaming, and SaaS infrastructure on Base mainnet."/>
+<meta name="theme-color" content="#04070e"/>
+<meta property="og:title" content="Agunnaya Labs — AI + Web3 Autonomous Ecosystem"/>
+<meta property="og:description" content="Smart Contracts · AI Security · Blockchain Games · SaaS Infrastructure on Base Mainnet"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://agunnaya-labs.github.io"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link rel="canonical" href="https://agunnaya-labs.github.io"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}body{cursor:auto}#cur,#cur-r{display:none}}
+:root{
+  --ink:#04070e;--surface:#080d1a;--card:#0b1222;--border:rgba(255,255,255,0.065);
+  --acid:#c8ff00;--sky:#00aaff;--green:#22c55e;--red:#ef4444;--orange:#f97316;
+  --mid:#7a8799;--dim:#3a4455;--text:#dde4ef;
+  --ff-d:'Bebas Neue',sans-serif;--ff-b:'DM Sans',sans-serif;--ff-m:'DM Mono',monospace;
+}
+body{font-family:var(--ff-b);background:var(--ink);color:var(--text);overflow-x:hidden;cursor:none}
+a{color:inherit;text-decoration:none}
+#cur{position:fixed;width:8px;height:8px;background:var(--acid);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .15s,height .15s}
+#cur-r{position:fixed;width:32px;height:32px;border:1px solid rgba(200,255,0,.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+body.hovering #cur{width:14px;height:14px}
+body.hovering #cur-r{width:48px;height:48px}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45}
+.z{position:relative;z-index:1}
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--acid);z-index:500;width:0}
+#toast{position:fixed;bottom:28px;right:28px;z-index:600;background:var(--card);border:1px solid rgba(200,255,0,.25);border-radius:6px;padding:13px 22px;font-family:var(--ff-m);font-size:.72rem;color:var(--text);letter-spacing:.04em;max-width:320px;transform:translateY(12px);opacity:0;pointer-events:none;transition:all .28s cubic-bezier(.4,0,.2,1)}
+#toast.show{transform:translateY(0);opacity:1}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.9}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* HEADER */
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 48px;position:fixed;top:0;left:0;right:0;z-index:200;backdrop-filter:blur(24px);border-bottom:1px solid var(–border);background:rgba(4,7,14,.78);transition:padding .3s}
+header.scrolled{padding:12px 48px}
+.logo{font-family:var(–ff-d);font-size:1.4rem;letter-spacing:.1em;display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-dot{width:8px;height:8px;background:var(–acid);border-radius:50%;animation:blink 2.4s infinite}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-links a{font-family:var(–ff-m);font-size:.63rem;color:var(–mid);letter-spacing:.08em;transition:color .2s}
+.nav-links a:hover{color:var(–text)}
+.nav-ctas{display:flex;gap:8px;align-items:center}
+.ham{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.ham span{display:block;width:22px;height:1.5px;background:var(–mid);transition:all .25s}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mobile-menu{display:none;position:fixed;top:58px;left:0;right:0;background:rgba(4,7,14,.97);border-bottom:1px solid var(–border);padding:24px 28px;z-index:199;flex-direction:column;gap:20px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:var(–ff-m);font-size:.78rem;color:var(–mid);letter-spacing:.08em;border-bottom:1px solid var(–border);padding-bottom:16px}
+.mobile-menu a:last-child{border:none;padding:0}
+
+/* BUTTONS */
+.btn{font-family:var(–ff-m);font-size:.68rem;letter-spacing:.06em;padding:9px 20px;border-radius:3px;cursor:pointer;transition:all .2s;border:none;outline:none;white-space:nowrap}
+.btn-ghost{background:transparent;color:var(–mid);border:1px solid var(–border)}
+.btn-ghost:hover{color:var(–text);border-color:rgba(255,255,255,.18)}
+.btn-acid{background:var(–acid);color:var(–ink);font-weight:500}
+.btn-acid:hover{background:#d8ff20;box-shadow:0 4px 20px rgba(200,255,0,.28);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(–acid);border:1px solid rgba(200,255,0,.35)}
+.btn-outline:hover{background:rgba(200,255,0,.07);border-color:var(–acid)}
+.btn-xl{padding:14px 36px;font-size:.75rem}
+#wallet-btn.connected{color:var(–green);border-color:rgba(34,197,94,.3)}
+#wallet-btn.wrong-net{color:var(–red);border-color:rgba(239,68,68,.35);animation:shake .4s}
+
+/* WALLET PANEL */
+#wallet-panel{display:none;position:fixed;top:70px;right:28px;z-index:300;background:var(–card);border:1px solid rgba(200,255,0,.2);border-radius:8px;padding:22px 24px;min-width:280px;box-shadow:0 16px 48px rgba(0,0,0,.5);animation:fadeDown .2s ease}
+#wallet-panel.open{display:block}
+.wp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.wp-label{font-family:var(–ff-m);font-size:.6rem;color:var(–mid);letter-spacing:.08em;text-transform:uppercase}
+.wp-val{font-family:var(–ff-m);font-size:.74rem;color:var(–text)}
+.wp-val.accent{color:var(–acid)}.wp-val.green{color:var(–green)}
+.wp-divider{height:1px;background:var(–border);margin:12px 0}
+.wp-actions{display:flex;gap:8px;margin-top:14px}
+.wp-actions .btn{flex:1;font-size:.63rem;padding:8px}
+
+/* HERO */
+.hero{min-height:100vh;padding:160px 48px 100px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.hero-eyebrow{font-family:var(–ff-m);font-size:.68rem;color:var(–acid);letter-spacing:.28em;text-transform:uppercase;display:flex;align-items:center;gap:14px;margin-bottom:36px;opacity:0;animation:up .7s .1s forwards}
+.eyebrow-line{height:1px;width:40px;background:var(–acid);flex-shrink:0}
+.gas-pill{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:var(–ff-m);font-size:.62rem;color:var(–mid);border:1px solid var(–border);padding:4px 10px;border-radius:100px;letter-spacing:.06em}
+.gas-dot{width:5px;height:5px;border-radius:50%;background:var(–green);animation:blink 1.5s infinite}
+.hero-h1{font-family:var(–ff-d);font-size:clamp(4.5rem,11vw,11.5rem);line-height:.88;letter-spacing:.015em;max-width:1000px;opacity:0;animation:up .8s .25s forwards}
+.hero-h1 em{font-style:normal;color:var(–acid)}
+.hero-h1 .line2{display:block;color:var(–mid)}
+.hero-body{margin-top:40px;max-width:500px;font-size:1rem;line-height:1.75;color:var(–mid);font-weight:300;opacity:0;animation:up .8s .4s forwards}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:52px;opacity:0;animation:up .8s .55s forwards}
+.hero-stats{display:flex;margin-top:72px;flex-wrap:wrap;border:1px solid var(–border);border-radius:8px;overflow:hidden;max-width:760px;opacity:0;animation:up .8s .7s forwards}
+.stat{flex:1;min-width:150px;padding:22px 28px;border-right:1px solid var(–border);display:flex;flex-direction:column;gap:5px}
+.stat:last-child{border-right:none}
+.stat-n{font-family:var(–ff-d);font-size:2.2rem;color:var(–text);line-height:1}
+.stat-l{font-family:var(–ff-m);font-size:.6rem;color:var(–mid);letter-spacing:.1em;text-transform:uppercase}
+.hero-scroll{position:absolute;bottom:44px;right:48px;font-family:var(–ff-m);font-size:.62rem;color:var(–dim);letter-spacing:.15em;writing-mode:vertical-rl;display:flex;align-items:center;gap:12px;opacity:0;animation:up 1s .9s forwards}
+.scroll-bar{width:1px;height:40px;background:linear-gradient(var(–acid),transparent)}
+
+/* SECTIONS */
+section{padding:100px 48px}
+.sec-label{font-family:var(–ff-m);font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(–acid);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.sec-label::before{content:’’;height:1px;width:28px;background:var(–acid)}
+.sec-title{font-family:var(–ff-d);font-size:clamp(3rem,6vw,6rem);line-height:.95;letter-spacing:.02em;margin-bottom:64px}
+hr.rule{border:none;height:1px;background:var(–border);margin:0 48px}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .65s,transform .65s}
+.reveal.visible{opacity:1;transform:none}
+
+/* AI */
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(–border);border:1px solid var(–border);border-radius:10px;overflow:hidden;max-width:1200px}
+.ai-card{background:var(–card);padding:52px;position:relative;overflow:hidden;transition:background .3s}
+.ai-card::after{content:’’;position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,255,0,.04),transparent 60%);opacity:0;transition:opacity .3s}
+.ai-card:hover{background:#0e1729}.ai-card:hover::after{opacity:1}
+.ai-num{font-family:var(–ff-d);font-size:5rem;color:var(–border);position:absolute;top:28px;right:36px;line-height:1;transition:color .3s;user-select:none}
+.ai-card:hover .ai-num{color:rgba(200,255,0,.14)}
+.ai-card h3{font-family:var(–ff-d);font-size:2.4rem;letter-spacing:.03em;margin-bottom:12px}
+.ai-card p{color:var(–mid);font-size:.9rem;line-height:1.65;font-weight:300;margin-bottom:28px;max-width:360px}
+.ai-link{display:inline-flex;align-items:center;gap:8px;font-family:var(–ff-m);font-size:.68rem;color:var(–acid);letter-spacing:.06em;border-bottom:1px solid rgba(200,255,0,.3);padding-bottom:2px;transition:gap .2s,border-color .2s}
+.ai-link:hover{gap:14px;border-color:var(–acid)}
+.detectors{margin-top:36px;display:flex;flex-wrap:wrap;gap:8px}
+.det-tag{font-family:var(–ff-m);font-size:.6rem;letter-spacing:.06em;color:var(–mid);border:1px solid var(–border);padding:5px 12px;border-radius:3px;transition:all .2s}
+.det-tag:hover{color:var(–text);border-color:rgba(255,255,255,.2)}
+.gh-stat{display:inline-flex;align-items:center;gap:6px;font-family:var(–ff-m);font-size:.62rem;color:var(–mid);border:1px solid var(–border);padding:4px 10px;border-radius:3px;margin-top:20px}
+.gh-star{color:#f4c430}
+
+/* ARENA */
+.arena-section{background:var(–surface)}
+.contracts-table{width:100%;border-collapse:collapse;max-width:1200px}
+.contracts-table th{font-family:var(–ff-m);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(–dim);border-bottom:1px solid var(–border);padding:0 12px 16px 0;text-align:left}
+.contracts-table th:last-child{text-align:right;padding-right:0}
+.contracts-table th:nth-child(3){text-align:center}
+.contracts-table tr{border-bottom:1px solid var(–border)}
+.contracts-table tr:last-child{border-bottom:none}
+.contracts-table td{padding:22px 12px 22px 0;vertical-align:middle}
+.contracts-table td:first-child{padding-left:0}
+.ct-name{font-family:var(–ff-d);font-size:1.5rem;letter-spacing:.04em}
+.ct-type{font-family:var(–ff-m);font-size:.6rem;color:var(–mid);letter-spacing:.06em}
+.ct-addr-wrap{display:flex;align-items:center;gap:8px}
+.ct-addr{font-family:var(–ff-m);font-size:.7rem;color:var(–sky);transition:color .2s;word-break:break-all}
+.ct-addr:hover{color:#4dcfff}
+.copy-btn{background:none;border:1px solid var(–border);color:var(–dim);font-size:.58rem;padding:3px 7px;border-radius:3px;cursor:pointer;font-family:var(–ff-m);transition:all .18s;white-space:nowrap;flex-shrink:0}
+.copy-btn:hover{color:var(–text);border-color:rgba(255,255,255,.2)}
+.copy-btn.copied{color:var(–green);border-color:rgba(34,197,94,.3)}
+.ct-txn{font-family:var(–ff-m);font-size:.68rem;color:var(–mid);text-align:center}
+.ct-txn.loading{color:var(–dim)}
+.ct-status{text-align:right}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(–ff-m);font-size:.58rem;letter-spacing:.08em;color:var(–green);border:1px solid rgba(34,197,94,.22);padding:5px 12px;border-radius:3px}
+.badge-dot{width:4px;height:4px;border-radius:50%;background:var(–green);animation:blink 2s infinite}
+.token-panel{margin-top:48px;max-width:1200px;border:1px solid var(–border);border-radius:8px;overflow:hidden}
+.token-panel-header{background:var(–card);padding:18px 28px;border-bottom:1px solid var(–border);display:flex;align-items:center;gap:12px}
+.token-panel-header h4{font-family:var(–ff-d);font-size:1.4rem;letter-spacing:.04em}
+.live-tag{font-family:var(–ff-m);font-size:.58rem;color:var(–acid);border:1px solid rgba(200,255,0,.3);padding:3px 8px;border-radius:2px;letter-spacing:.1em;display:flex;align-items:center;gap:5px}
+.token-metrics{display:grid;grid-template-columns:repeat(4,1fr)}
+.tm-cell{padding:24px 28px;border-right:1px solid var(–border);display:flex;flex-direction:column;gap:5px}
+.tm-cell:last-child{border-right:none}
+.tm-label{font-family:var(–ff-m);font-size:.6rem;color:var(–dim);letter-spacing:.08em;text-transform:uppercase}
+.tm-val{font-family:var(–ff-d);font-size:1.8rem;letter-spacing:.03em}
+.tm-sub{font-family:var(–ff-m);font-size:.6rem;color:var(–mid)}
+
+/* LEADERBOARD */
+.lb-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px}
+.lb-meta{font-family:var(–ff-m);font-size:.58rem;color:var(–dim);letter-spacing:.06em;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.lb-refresh-btn{background:none;border:1px solid var(–border);color:var(–mid);font-family:var(–ff-m);font-size:.58rem;padding:5px 12px;border-radius:3px;cursor:pointer;transition:all .2s;letter-spacing:.06em}
+.lb-refresh-btn:hover{color:var(–text);border-color:rgba(255,255,255,.2)}
+.lb-refresh-btn.spinning{animation:spin .8s linear infinite;pointer-events:none}
+.lb-podium{display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:12px;max-width:860px;margin:0 auto 52px;align-items:end}
+.podium-card{background:var(–card);border:1px solid var(–border);border-radius:8px;padding:28px 20px;text-align:center;position:relative;overflow:hidden;transition:border-color .3s}
+.podium-card.rank-1{border-color:rgba(200,255,0,.3);background:linear-gradient(160deg,#0e1a06,var(–card) 60%)}
+.podium-card.rank-2{border-color:rgba(0,170,255,.2)}
+.podium-rank{font-family:var(–ff-d);font-size:3.2rem;line-height:1;margin-bottom:8px}
+.rank-1 .podium-rank{color:var(–acid)}.rank-2 .podium-rank{color:var(–sky)}.rank-3 .podium-rank{color:var(–mid)}
+.podium-crown{position:absolute;top:10px;right:12px;font-size:1.2rem;animation:float 3s ease-in-out infinite}
+.podium-addr{font-family:var(–ff-m);font-size:.62rem;color:var(–sky);margin-bottom:12px}
+.podium-wins{font-family:var(–ff-d);font-size:2rem;color:var(–text);line-height:1}
+.podium-wl{font-family:var(–ff-m);font-size:.56rem;color:var(–mid);margin-top:4px}
+.podium-rate{display:inline-block;margin-top:10px;font-family:var(–ff-m);font-size:.6rem;padding:3px 10px;border-radius:2px;letter-spacing:.06em}
+.rate-hot{background:rgba(200,255,0,.1);color:var(–acid);border:1px solid rgba(200,255,0,.2)}
+.rate-mid{background:rgba(0,170,255,.08);color:var(–sky);border:1px solid rgba(0,170,255,.15)}
+.rate-cold{background:rgba(255,255,255,.04);color:var(–mid);border:1px solid var(–border)}
+.lb-table{width:100%;border-collapse:collapse;max-width:1200px}
+.lb-table th{font-family:var(–ff-m);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(–dim);border-bottom:1px solid var(–border);padding:0 16px 14px 0;text-align:left}
+.lb-table tr{border-bottom:1px solid var(–border);transition:background .15s}
+.lb-table tr:last-child{border-bottom:none}
+.lb-table tr:hover{background:rgba(255,255,255,.02)}
+.lb-table td{padding:16px 16px 16px 0;font-family:var(–ff-m);font-size:.7rem;vertical-align:middle}
+.lb-rank-cell{font-family:var(–ff-d);font-size:1.4rem;color:var(–dim);width:48px}
+.lb-rank-cell.top3{color:var(–acid)}
+.lb-addr{color:var(–sky)}
+.lb-wins{color:var(–green)}.lb-losses{color:var(–red)}
+.lb-rate-bar{display:flex;align-items:center;gap:8px}
+.lb-bar-track{flex:1;height:3px;background:var(–border);border-radius:2px;max-width:80px}
+.lb-bar-fill{height:100%;border-radius:2px;background:var(–acid);transition:width .6s ease}
+.lb-rate-pct{font-size:.6rem;color:var(–mid);min-width:36px;text-align:right}
+.lb-empty{text-align:center;padding:48px;color:var(–dim);font-family:var(–ff-m);font-size:.72rem;letter-spacing:.06em}
+
+/* NFT GALLERY */
+.nft-section{background:var(–surface)}
+.nft-controls{display:flex;align-items:center;gap:12px;margin-bottom:40px;flex-wrap:wrap}
+.nft-filter{font-family:var(–ff-m);font-size:.62rem;color:var(–mid);border:1px solid var(–border);padding:7px 16px;border-radius:3px;cursor:pointer;transition:all .2s;background:transparent;letter-spacing:.06em}
+.nft-filter.active,.nft-filter:hover{color:var(–acid);border-color:rgba(200,255,0,.3);background:rgba(200,255,0,.04)}
+.nft-count{margin-left:auto;font-family:var(–ff-m);font-size:.62rem;color:var(–dim)}
+.nft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;max-width:1200px}
+.nft-card{background:var(–card);border:1px solid var(–border);border-radius:8px;overflow:hidden;transition:border-color .3s,transform .3s;cursor:pointer}
+.nft-card:hover{border-color:rgba(200,255,0,.25);transform:translateY(-4px)}
+.nft-img-wrap{aspect-ratio:1;background:var(–ink);position:relative;overflow:hidden}
+.nft-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.nft-card:hover .nft-img-wrap img{transform:scale(1.05)}
+.nft-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:linear-gradient(135deg,var(–ink),#0d1526)}
+.nft-owned-badge{position:absolute;top:8px;right:8px;background:var(–acid);color:var(–ink);font-family:var(–ff-m);font-size:.5rem;padding:3px 7px;border-radius:2px;letter-spacing:.08em;font-weight:500}
+.nft-info{padding:16px}
+.nft-name{font-family:var(–ff-d);font-size:1.25rem;letter-spacing:.04em;margin-bottom:3px}
+.nft-id{font-family:var(–ff-m);font-size:.56rem;color:var(–dim);letter-spacing:.06em;margin-bottom:10px}
+.nft-traits{display:flex;flex-wrap:wrap;gap:5px}
+.nft-trait{font-family:var(–ff-m);font-size:.53rem;color:var(–mid);border:1px solid var(–border);padding:3px 7px;border-radius:2px}
+.nft-trait span{color:var(–text)}
+.nft-skel{background:var(–card);border:1px solid var(–border);border-radius:8px;overflow:hidden;animation:pulse 1.4s ease-in-out infinite}
+.nft-skel-img{aspect-ratio:1;background:var(–border)}
+.nft-skel-info{padding:16px;display:flex;flex-direction:column;gap:8px}
+.nft-skel-line{height:10px;background:var(–border);border-radius:3px}
+.nft-skel-line.short{width:55%}
+.nft-prompt{text-align:center;padding:48px 24px;border:1px dashed var(–border);border-radius:8px;max-width:420px}
+.nft-prompt p{font-family:var(–ff-m);font-size:.7rem;color:var(–dim);letter-spacing:.05em;margin-bottom:18px}
+
+/* NFT MODAL */
+#nft-modal{display:none;position:fixed;inset:0;z-index:400;background:rgba(4,7,14,.9);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:24px}
+#nft-modal.open{display:flex}
+.nft-modal-wrap{position:relative;max-width:660px;width:100%}
+.nft-modal-close{position:absolute;top:-14px;right:-14px;z-index:1;background:var(–card);border:1px solid var(–border);color:var(–mid);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.nft-modal-close:hover{color:var(–text);border-color:rgba(255,255,255,.2)}
+.nft-modal-inner{background:var(–card);border:1px solid rgba(200,255,0,.18);border-radius:12px;overflow:hidden;max-height:90vh;overflow-y:auto;animation:fadeDown .25s ease}
+.nft-modal-img{aspect-ratio:1;width:100%;background:var(–ink);overflow:hidden;max-height:360px}
+.nft-modal-img img{width:100%;height:100%;object-fit:cover}
+.nft-modal-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:5rem}
+.nft-modal-body{padding:28px}
+.nft-modal-title{font-family:var(–ff-d);font-size:2.2rem;letter-spacing:.04em;margin-bottom:5px}
+.nft-modal-sub{font-family:var(–ff-m);font-size:.62rem;color:var(–mid);letter-spacing:.06em;margin-bottom:22px}
+.nft-modal-traits{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px}
+.nft-modal-trait{background:rgba(200,255,0,.03);border:1px solid rgba(200,255,0,.1);border-radius:4px;padding:10px 12px}
+.nmt-key{font-family:var(–ff-m);font-size:.52rem;color:var(–mid);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.nmt-val{font-family:var(–ff-m);font-size:.72rem;color:var(–text)}
+.nft-modal-actions{display:flex;gap:10px}
+
+/* AUDIT FEED */
+.audit-terminal{max-width:1200px;border:1px solid var(–border);border-radius:8px;overflow:hidden}
+.audit-bar{background:#0d1526;padding:12px 20px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(–border)}
+.term-dot{width:10px;height:10px;border-radius:50%}
+.td-r{background:#ef4444}.td-y{background:#f59e0b}.td-g{background:#22c55e}
+.term-title{font-family:var(–ff-m);font-size:.62rem;color:var(–mid);margin-left:8px;letter-spacing:.06em}
+.term-live{margin-left:auto;display:flex;align-items:center;gap:6px;font-family:var(–ff-m);font-size:.56rem;color:var(–green);letter-spacing:.08em}
+.audit-feed{max-height:480px;overflow-y:auto}
+.audit-feed::-webkit-scrollbar{width:4px}
+.audit-feed::-webkit-scrollbar-thumb{background:var(–border);border-radius:2px}
+.audit-entry{display:grid;grid-template-columns:auto 1fr auto;align-items:start;gap:16px;padding:18px 24px;border-bottom:1px solid var(–border);transition:background .15s}
+.audit-entry:last-child{border-bottom:none}
+.audit-entry:hover{background:rgba(255,255,255,.02)}
+.audit-sev{font-family:var(–ff-m);font-size:.55rem;letter-spacing:.08em;padding:3px 8px;border-radius:2px;white-space:nowrap;align-self:flex-start;margin-top:2px}
+.sev-critical{background:rgba(239,68,68,.12);color:var(–red);border:1px solid rgba(239,68,68,.25)}
+.sev-high{background:rgba(249,115,22,.1);color:var(–orange);border:1px solid rgba(249,115,22,.2)}
+.sev-medium{background:rgba(245,158,11,.08);color:#f59e0b;border:1px solid rgba(245,158,11,.15)}
+.sev-low{background:rgba(34,197,94,.06);color:var(–green);border:1px solid rgba(34,197,94,.12)}
+.sev-info{background:rgba(0,170,255,.06);color:var(–sky);border:1px solid rgba(0,170,255,.12)}
+.audit-detector{font-family:var(–ff-d);font-size:1.1rem;letter-spacing:.04em;margin-bottom:3px}
+.audit-repo{font-family:var(–ff-m);font-size:.6rem;color:var(–sky);margin-bottom:5px}
+.audit-desc{font-family:var(–ff-m);font-size:.63rem;color:var(–mid);line-height:1.55}
+.audit-meta{text-align:right;flex-shrink:0}
+.audit-time{font-family:var(–ff-m);font-size:.56rem;color:var(–dim)}
+.audit-pr{font-family:var(–ff-m);font-size:.56rem;color:var(–sky);margin-top:4px}
+.audit-stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(–border)}
+.audit-stat{padding:18px 24px;border-right:1px solid var(–border);display:flex;flex-direction:column;gap:4px}
+.audit-stat:last-child{border-right:none}
+.audit-stat-n{font-family:var(–ff-d);font-size:1.7rem;letter-spacing:.03em}
+.audit-stat-l{font-family:var(–ff-m);font-size:.55rem;color:var(–dim);letter-spacing:.08em;text-transform:uppercase}
+.audit-skel{padding:18px 24px;border-bottom:1px solid var(–border);display:flex;gap:16px;animation:pulse 1.4s ease-in-out infinite}
+.audit-skel-sev{width:56px;height:20px;background:var(–border);border-radius:3px;flex-shrink:0}
+.audit-skel-body{flex:1;display:flex;flex-direction:column;gap:8px}
+.audit-skel-line{height:9px;background:var(–border);border-radius:3px}
+.audit-skel-line.short{width:50%}
+
+/* PRO SECTION */
+.pro-section{background:var(–ink)}
+.pro-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(–border);border:1px solid var(–border);border-radius:10px;overflow:hidden;max-width:980px}
+.pro-card{background:var(–card);padding:48px 44px;position:relative;overflow:hidden}
+.pro-card.featured{background:linear-gradient(160deg,#0d1e04,var(–card) 55%)}
+.pro-card.featured::before{content:’’;position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(–acid),transparent)}
+.pro-tier{font-family:var(–ff-m);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;color:var(–mid)}
+.pro-tier.acid{color:var(–acid)}
+.pro-price{font-family:var(–ff-d);font-size:4rem;line-height:1;margin-bottom:4px}
+.pro-price sup{font-size:1.8rem;vertical-align:super;margin-right:2px}
+.pro-price sub{font-family:var(–ff-m);font-size:.85rem;color:var(–mid);font-weight:300}
+.pro-original{font-family:var(–ff-m);font-size:.68rem;color:var(–dim);text-decoration:line-through;min-height:18px;margin-bottom:4px}
+.pro-discount{display:none;align-items:center;gap:6px;font-family:var(–ff-m);font-size:.58rem;color:var(–acid);border:1px solid rgba(200,255,0,.25);padding:3px 9px;border-radius:2px;letter-spacing:.08em;margin-bottom:20px}
+.pro-discount.show{display:inline-flex;margin-bottom:20px}
+.pro-desc{color:var(–mid);font-size:.87rem;line-height:1.65;font-weight:300;margin-bottom:28px}
+.pro-features{list-style:none;margin-bottom:32px;display:flex;flex-direction:column;gap:9px}
+.pro-features li{display:flex;align-items:flex-start;gap:10px;font-family:var(–ff-m);font-size:.66rem;color:var(–mid);letter-spacing:.02em;line-height:1.5}
+.pro-features li::before{content:‘✓’;color:var(–acid);flex-shrink:0;margin-top:1px}
+.pro-features li.no{opacity:.38}
+.pro-features li.no::before{content:‘✗’;color:var(–dim)}
+.pro-cta{width:100%;padding:14px;font-size:.7rem;letter-spacing:.08em}
+.pro-cta:disabled{opacity:.6;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.stripe-note{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;font-family:var(–ff-m);font-size:.56rem;color:var(–dim);letter-spacing:.05em}
+.holder-note{margin-top:14px;padding:11px 14px;background:rgba(200,255,0,.04);border:1px solid rgba(200,255,0,.12);border-radius:4px;font-family:var(–ff-m);font-size:.6rem;color:var(–mid);line-height:1.55;display:none}
+.holder-note.show{display:block}
+.holder-note strong{color:var(–acid)}
+
+/* SAAS */
+.saas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1200px}
+.saas-card{border:1px solid var(–border);border-radius:8px;padding:40px 36px;position:relative;overflow:hidden;background:var(–card);transition:border-color .3s,transform .3s}
+.saas-card:hover{border-color:rgba(200,255,0,.2);transform:translateY(-4px)}
+.saas-card::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(–acid),transparent);opacity:0;transition:opacity .3s}
+.saas-card:hover::before{opacity:1}
+.saas-icon{font-size:1.8rem;margin-bottom:20px}
+.saas-card h3{font-family:var(–ff-d);font-size:1.8rem;letter-spacing:.04em;margin-bottom:10px}
+.saas-card p{color:var(–mid);font-size:.88rem;line-height:1.65;font-weight:300}
+.saas-pill{display:inline-block;margin-top:20px;font-family:var(–ff-m);font-size:.56rem;letter-spacing:.1em;color:var(–mid);border:1px solid var(–border);padding:4px 10px;border-radius:2px}
+
+/* WAITLIST */
+.waitlist-section{background:var(–surface);text-align:center}
+.waitlist-inner{max-width:600px;margin:0 auto}
+.waitlist-inner .sec-label{justify-content:center}
+.waitlist-inner .sec-title{margin-bottom:16px}
+.waitlist-inner>p{color:var(–mid);margin-bottom:48px;font-weight:300;font-size:.95rem}
+.input-row{display:flex;max-width:460px;margin:0 auto;border:1px solid var(–border);border-radius:4px;overflow:hidden;background:var(–card);transition:border-color .25s}
+.input-row:focus-within{border-color:rgba(200,255,0,.4)}
+.input-row input{flex:1;padding:14px 20px;background:transparent;border:none;outline:none;font-family:var(–ff-m);font-size:.8rem;color:var(–text)}
+.input-row input::placeholder{color:var(–dim)}
+.input-row button{padding:14px 26px;border-radius:0;font-size:.72rem}
+.waitlist-note{margin-top:14px;font-family:var(–ff-m);font-size:.6rem;color:var(–dim);letter-spacing:.06em}
+.waitlist-success{display:none;flex-direction:column;align-items:center;gap:12px;padding:28px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;margin:0 auto;max-width:460px}
+.waitlist-success.show{display:flex}
+.waitlist-success span{font-family:var(–ff-d);font-size:2rem;color:var(–green);letter-spacing:.04em}
+.waitlist-success p{font-family:var(–ff-m);font-size:.7rem;color:var(–mid);letter-spacing:.06em}
+
+/* FOOTER */
+footer{padding:44px 48px;border-top:1px solid var(–border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px}
+.footer-logo{font-family:var(–ff-d);font-size:1.2rem;letter-spacing:.1em;color:var(–mid)}
+.footer-links{display:flex;gap:28px;flex-wrap:wrap}
+.footer-links a{font-family:var(–ff-m);font-size:.63rem;color:var(–dim);letter-spacing:.06em;transition:color .2s}
+.footer-links a:hover{color:var(–text)}
+.footer-copy{font-family:var(–ff-m);font-size:.58rem;color:var(–dim)}
+
+@media(max-width:960px){
+header{padding:16px 24px}
+.nav-links{display:none}
+.ham{display:flex}
+.hero{padding:120px 24px 80px}
+section{padding:72px 24px}
+hr.rule{margin:0 24px}
+.ai-grid,.pro-grid{grid-template-columns:1fr}
+.saas-grid{grid-template-columns:1fr}
+.token-metrics{grid-template-columns:1fr 1fr}
+.token-metrics .tm-cell:nth-child(2){border-right:none}
+.token-metrics .tm-cell:nth-child(3){border-top:1px solid var(–border)}
+.contracts-table td:nth-child(3),.contracts-table th:nth-child(3){display:none}
+footer{padding:32px 24px;flex-direction:column;align-items:flex-start}
+.stat{min-width:calc(50% - 1px)}
+.lb-podium{grid-template-columns:1fr}
+.audit-entry{grid-template-columns:auto 1fr}
+.audit-meta{display:none}
+.audit-stats{grid-template-columns:1fr 1fr}
+.audit-stats .audit-stat:nth-child(2){border-right:none}
+.audit-stats .audit-stat:nth-child(3){border-top:1px solid var(–border)}
+.nft-modal-traits{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+.hero-h1{font-size:clamp(3.5rem,16vw,5.5rem)}
+.hero-stats{flex-direction:column}
+.stat{border-right:none!important;border-bottom:1px solid var(–border)}
+.stat:last-child{border-bottom:none}
+.token-metrics{grid-template-columns:1fr}
+.token-metrics .tm-cell{border-right:none;border-bottom:1px solid var(–border)}
+.audit-stats{grid-template-columns:1fr}
+.audit-stat{border-right:none!important;border-bottom:1px solid var(–border)}
+}
+</style>
+
+</head>
+<body>
+<div id="cur"></div><div id="cur-r"></div><div id="progress"></div><div id="toast"></div>
+
+<!-- NFT MODAL -->
+
+<div id="nft-modal">
+  <div class="nft-modal-wrap">
+    <button class="nft-modal-close" onclick="closeNftModal()">✕</button>
+    <div class="nft-modal-inner">
+      <div class="nft-modal-img" id="modal-img-wrap"><div class="nft-modal-img-ph" id="modal-img-ph">⚔️</div></div>
+      <div class="nft-modal-body">
+        <div class="nft-modal-title" id="modal-name"></div>
+        <div class="nft-modal-sub" id="modal-sub"></div>
+        <div class="nft-modal-traits" id="modal-traits"></div>
+        <div class="nft-modal-actions">
+          <a id="modal-os" href="#" target="_blank" rel="noopener"><button class="btn btn-outline">OpenSea ↗</button></a>
+          <a id="modal-bs" href="#" target="_blank" rel="noopener"><button class="btn btn-ghost">BaseScan ↗</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-menu" id="mob-menu">
+  <a href="#ai" onclick="closeMob()">AI Security</a>
+  <a href="#arena" onclick="closeMob()">Arena Protocol</a>
+  <a href="#leaderboard" onclick="closeMob()">Leaderboard</a>
+  <a href="#gallery" onclick="closeMob()">NFT Gallery</a>
+  <a href="#audits" onclick="closeMob()">Audit Feed</a>
+  <a href="#pro" onclick="closeMob()">Pro</a>
+  <a href="#waitlist" onclick="closeMob()">Waitlist</a>
+</div>
+
+<div id="wallet-panel">
+  <div class="wp-row"><span class="wp-label">Address</span><span class="wp-val" id="wp-addr">—</span></div>
+  <div class="wp-row"><span class="wp-label">Network</span><span class="wp-val green" id="wp-net">—</span></div>
+  <div class="wp-divider"></div>
+  <div class="wp-row"><span class="wp-label">ETH Balance</span><span class="wp-val" id="wp-eth">—</span></div>
+  <div class="wp-row"><span class="wp-label">ARENA Balance</span><span class="wp-val accent" id="wp-arena">—</span></div>
+  <div class="wp-divider"></div>
+  <div class="wp-actions">
+    <button class="btn btn-ghost" onclick="switchToBase()">Switch to Base</button>
+    <button class="btn btn-ghost" onclick="disconnectWallet()">Disconnect</button>
+  </div>
+</div>
+
+<canvas id="bg"></canvas>
+
+<header class="z" id="header">
+  <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})"><div class="logo-dot"></div>AGUNNAYA LABS</div>
+  <nav class="nav-links">
+    <a href="#ai">AI Security</a><a href="#arena">Arena</a><a href="#leaderboard">Leaderboard</a>
+    <a href="#gallery">Gallery</a><a href="#audits">Audits</a><a href="#pro">Pro</a><a href="#waitlist">Waitlist</a>
+  </nav>
+  <div class="nav-ctas">
+    <button class="btn btn-ghost" id="wallet-btn" onclick="toggleWalletPanel()">Connect Wallet</button>
+    <button class="btn btn-acid" onclick="sTo('#pro')">Get Pro →</button>
+    <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="hero z">
+  <div class="hero-eyebrow"><span class="eyebrow-line"></span>Base Mainnet · Chain ID 8453<div class="gas-pill"><div class="gas-dot"></div><span id="gas-display">— gwei</span></div></div>
+  <h1 class="hero-h1">AI + WEB3<br><em>AUTONOMOUS</em><span class="line2">ECOSYSTEM</span></h1>
+  <p class="hero-body">Full-stack Web3 platform combining AI-powered smart contract security, on-chain blockchain gaming, and SaaS infrastructure — all live on Base mainnet.</p>
+  <div class="hero-actions">
+    <button class="btn btn-acid btn-xl" onclick="sTo('#leaderboard')">View Leaderboard →</button>
+    <a href="https://github.com/apps/smart-contract-auditor-bot" target="_blank" rel="noopener"><button class="btn btn-outline btn-xl">Install Auditor Bot</button></a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n" id="stat-supply">···</div><div class="stat-l">ARENA Supply</div></div>
+    <div class="stat"><div class="stat-n">5</div><div class="stat-l">Live Contracts</div></div>
+    <div class="stat"><div class="stat-n" id="stat-txns">···</div><div class="stat-l">Total Txns</div></div>
+    <div class="stat"><div class="stat-n" id="stat-stars">···</div><div class="stat-l">GitHub Stars</div></div>
+  </div>
+  <div class="hero-scroll"><span class="scroll-bar"></span>SCROLL</div>
+</div>
+
+<hr class="rule z">
+
+<!-- AI SECURITY -->
+
+<section id="ai" class="z">
+  <div class="sec-label reveal">AI Security System</div>
+  <div class="sec-title reveal">SMART CONTRACT<br>SECURITY</div>
+  <div class="ai-grid reveal">
+    <div class="ai-card">
+      <div class="ai-num">01</div>
+      <h3>Auditor Bot</h3>
+      <p>GitHub App that runs static analysis on every Solidity PR. Six detectors, severity-coded comments, and GitHub Checks — zero config, fully automatic.</p>
+      <a class="ai-link" href="https://github.com/apps/smart-contract-auditor-bot" target="_blank" rel="noopener">Install App ↗</a>
+      <div class="detectors">
+        <span class="det-tag">Reentrancy</span><span class="det-tag">tx.origin misuse</span><span class="det-tag">Unchecked calls</span>
+        <span class="det-tag">Selfdestruct</span><span class="det-tag">Honeypot / Rug-pull</span><span class="det-tag">Hardcoded secrets</span>
+      </div>
+      <div class="gh-stat"><span class="gh-star">★</span><span id="gh-stars-txt">— stars</span>&nbsp;·&nbsp;<span id="gh-forks-txt">— forks</span></div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-num">02</div>
+      <h3>Audit Dashboard</h3>
+      <p>Live vulnerability detection interface. Real-time results from every PR scan — severity breakdowns, remediation guidance, and historical audit logs.</p>
+      <a class="ai-link" href="https://v0-smart-contract-auditor-bot.vercel.app/" target="_blank" rel="noopener">Open Dashboard ↗</a>
+      <br><br>
+      <a class="ai-link" href="https://github.com/Agunnaya-Labs/agunnaya-labs.github.io" target="_blank" rel="noopener" style="margin-top:12px">View Source ↗</a>
+    </div>
+  </div>
+</section>
+
+<hr class="rule z">
+
+<!-- ARENA -->
+
+<section id="arena" class="z arena-section">
+  <div class="sec-label reveal">⚔️ Arena Protocol</div>
+  <div class="sec-title reveal">DEPLOYED ON<br>BASE MAINNET</div>
+  <table class="contracts-table reveal">
+    <thead><tr><th>Contract</th><th>Address</th><th>Txns</th><th style="text-align:right">Status</th></tr></thead>
+    <tbody id="contracts-tbody"></tbody>
+  </table>
+  <div class="token-panel reveal">
+    <div class="token-panel-header"><h4>ARENA TOKEN</h4><span class="live-tag"><div class="gas-dot"></div>LIVE · BASE MAINNET</span></div>
+    <div class="token-metrics">
+      <div class="tm-cell"><div class="tm-label">Name</div><div class="tm-val" id="tok-name" style="font-size:1.3rem">···</div></div>
+      <div class="tm-cell"><div class="tm-label">Symbol</div><div class="tm-val" id="tok-symbol">···</div></div>
+      <div class="tm-cell"><div class="tm-label">Total Supply</div><div class="tm-val" id="tok-supply">···</div><div class="tm-sub" id="tok-symbol2"></div></div>
+      <div class="tm-cell"><div class="tm-label">Decimals</div><div class="tm-val" id="tok-decimals">···</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule z">
+
+<!-- LEADERBOARD -->
+
+<section id="leaderboard" class="z">
+  <div class="lb-header">
+    <div>
+      <div class="sec-label reveal">⚔️ On-Chain Rankings</div>
+      <div class="sec-title reveal" style="margin-bottom:0">BATTLE<br>LEADERBOARD</div>
+    </div>
+    <div class="lb-meta">
+      <span id="lb-status">Reading chain…</span>
+      <button class="lb-refresh-btn" id="lb-btn" onclick="loadLeaderboard(true)">↻ Refresh</button>
+      <span>Live · ArenaBattle Contract · Base Mainnet</span>
+    </div>
+  </div>
+  <div class="lb-podium" id="lb-podium">
+    <div style="height:180px;background:var(--border);border-radius:8px;animation:pulse 1.4s ease-in-out infinite"></div>
+    <div style="height:220px;background:var(--border);border-radius:8px;animation:pulse 1.4s ease-in-out infinite;animation-delay:.1s"></div>
+    <div style="height:160px;background:var(--border);border-radius:8px;animation:pulse 1.4s ease-in-out infinite;animation-delay:.2s"></div>
+  </div>
+  <table class="lb-table reveal">
+    <thead><tr><th>#</th><th>Champion</th><th>Wins</th><th>Losses</th><th>Win Rate</th></tr></thead>
+    <tbody id="lb-tbody">
+      <tr><td colspan="5"><div style="height:12px;background:var(--border);border-radius:3px;animation:pulse 1.4s ease-in-out infinite"></div></td></tr>
+      <tr><td colspan="5"><div style="height:12px;background:var(--border);border-radius:3px;width:82%;animation:pulse 1.4s ease-in-out infinite;animation-delay:.1s"></div></td></tr>
+      <tr><td colspan="5"><div style="height:12px;background:var(--border);border-radius:3px;width:68%;animation:pulse 1.4s ease-in-out infinite;animation-delay:.2s"></div></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<hr class="rule z">
+
+<!-- NFT GALLERY -->
+
+<section id="gallery" class="z nft-section">
+  <div class="sec-label reveal">ArenaChampion · ERC-721</div>
+  <div class="sec-title reveal">NFT<br>GALLERY</div>
+  <div class="nft-controls reveal">
+    <button class="nft-filter active" onclick="setNftFilter('all',this)">All Champions</button>
+    <button class="nft-filter" onclick="setNftFilter('owned',this)">My Champions</button>
+    <span class="nft-count" id="nft-count">···</span>
+  </div>
+  <div class="nft-grid reveal" id="nft-grid">
+    <div class="nft-skel"><div class="nft-skel-img"></div><div class="nft-skel-info"><div class="nft-skel-line"></div><div class="nft-skel-line short"></div></div></div>
+    <div class="nft-skel"><div class="nft-skel-img"></div><div class="nft-skel-info"><div class="nft-skel-line"></div><div class="nft-skel-line short"></div></div></div>
+    <div class="nft-skel"><div class="nft-skel-img"></div><div class="nft-skel-info"><div class="nft-skel-line"></div><div class="nft-skel-line short"></div></div></div>
+    <div class="nft-skel"><div class="nft-skel-img"></div><div class="nft-skel-info"><div class="nft-skel-line"></div><div class="nft-skel-line short"></div></div></div>
+  </div>
+  <div style="text-align:center;margin-top:24px"><button class="btn btn-ghost" id="nft-more" style="display:none" onclick="loadMoreNfts()">Load More →</button></div>
+</section>
+
+<hr class="rule z">
+
+<!-- AUDIT FEED -->
+
+<section id="audits" class="z">
+  <div class="sec-label reveal">Live Vulnerability Feed</div>
+  <div class="sec-title reveal">AUDIT<br>ACTIVITY</div>
+  <div class="audit-terminal reveal">
+    <div class="audit-bar">
+      <div class="term-dot td-r"></div><div class="term-dot td-y"></div><div class="term-dot td-g"></div>
+      <span class="term-title">smart-contract-auditor-bot · live scan results</span>
+      <div class="term-live"><div class="gas-dot"></div>LIVE</div>
+    </div>
+    <div class="audit-feed" id="audit-feed">
+      <div class="audit-skel"><div class="audit-skel-sev"></div><div class="audit-skel-body"><div class="audit-skel-line"></div><div class="audit-skel-line short"></div></div></div>
+      <div class="audit-skel"><div class="audit-skel-sev"></div><div class="audit-skel-body"><div class="audit-skel-line"></div><div class="audit-skel-line short"></div></div></div>
+      <div class="audit-skel"><div class="audit-skel-sev"></div><div class="audit-skel-body"><div class="audit-skel-line"></div><div class="audit-skel-line short"></div></div></div>
+    </div>
+    <div class="audit-stats">
+      <div class="audit-stat"><div class="audit-stat-n" id="as-total">···</div><div class="audit-stat-l">Total Scans</div></div>
+      <div class="audit-stat"><div class="audit-stat-n" style="color:var(--red)" id="as-critical">···</div><div class="audit-stat-l">Critical Found</div></div>
+      <div class="audit-stat"><div class="audit-stat-n" style="color:var(--orange)" id="as-high">···</div><div class="audit-stat-l">High Severity</div></div>
+      <div class="audit-stat"><div class="audit-stat-n" style="color:var(--green)" id="as-clean">···</div><div class="audit-stat-l">Clean Passes</div></div>
+    </div>
+  </div>
+  <div style="text-align:right;max-width:1200px;margin-top:18px">
+    <a href="https://v0-smart-contract-auditor-bot.vercel.app/" target="_blank" rel="noopener"><button class="btn btn-outline">Open Full Dashboard ↗</button></a>
+  </div>
+</section>
+
+<hr class="rule z">
+
+<!-- PRO -->
+
+<section id="pro" class="z pro-section">
+  <div class="sec-label reveal">Stripe-Powered Subscriptions</div>
+  <div class="sec-title reveal">GO<br>PRO</div>
+  <div class="pro-grid reveal">
+    <div class="pro-card">
+      <div class="pro-tier">Free Tier</div>
+      <div class="pro-price"><sup>$</sup>0<sub>/mo</sub></div>
+      <div class="pro-original">&nbsp;</div>
+      <p class="pro-desc">Everything you need to explore the Arena ecosystem. No credit card required.</p>
+      <ul class="pro-features">
+        <li>GitHub Auditor Bot (public repos)</li>
+        <li>On-chain leaderboard</li>
+        <li>NFT gallery viewer</li>
+        <li>Audit feed (last 10 scans)</li>
+        <li class="no">Private repo scanning</li>
+        <li class="no">Priority audit queue</li>
+        <li class="no">REST API access</li>
+        <li class="no">SaaS analytics dashboard</li>
+      </ul>
+      <button class="btn btn-ghost pro-cta" onclick="sTo('#waitlist')">Join Waitlist →</button>
+    </div>
+    <div class="pro-card featured">
+      <div class="pro-tier acid">Pro · Most Popular</div>
+      <div class="pro-price"><sup>$</sup><span id="pro-price-n">49</span><sub>/mo</sub></div>
+      <div class="pro-original" id="pro-orig">&nbsp;</div>
+      <div class="pro-discount" id="pro-disc">🏆 ARENA Holder Discount Applied</div>
+      <p class="pro-desc">Full platform access for serious builders. Priority scanning, API keys, and SaaS tooling as it ships.</p>
+      <ul class="pro-features">
+        <li>Everything in Free</li>
+        <li>Private repo scanning</li>
+        <li>Priority audit queue (2× faster)</li>
+        <li>REST API access + API key</li>
+        <li>Full audit history export</li>
+        <li>SaaS analytics (early access)</li>
+        <li>AI automation triggers (beta)</li>
+        <li>Dedicated support channel</li>
+      </ul>
+      <button class="btn btn-acid pro-cta" id="pro-btn" onclick="startCheckout()">Upgrade to Pro →</button>
+      <div class="stripe-note">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity=".4"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Secured by Stripe · Cancel anytime
+      </div>
+      <div class="holder-note" id="holder-note"><strong>ARENA holder detected.</strong> Your wallet holds ARENA — you qualify for a 20% loyalty discount, applied at checkout.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule z">
+
+<!-- SAAS -->
+
+<section id="saas" class="z">
+  <div class="sec-label reveal">SaaS Infrastructure</div>
+  <div class="sec-title reveal">BUILT TO<br>SCALE</div>
+  <div class="saas-grid">
+    <div class="saas-card reveal"><div class="saas-icon">📊</div><h3>Analytics Engine</h3><p>On-chain event indexing and wallet analytics across Base mainnet.</p><span class="saas-pill">COMING SOON</span></div>
+    <div class="saas-card reveal" style="transition-delay:.1s"><div class="saas-icon">🤖</div><h3>AI Automation</h3><p>Trigger-based contract interactions driven by configurable AI conditions.</p><span class="saas-pill">IN DEVELOPMENT</span></div>
+    <div class="saas-card reveal" style="transition-delay:.2s"><div class="saas-icon">💳</div><h3>Stripe Monetization</h3><p>Fiat on-ramp with Stripe Checkout, recurring subscriptions, and Pro tier.</p><span class="saas-pill">LIVE ↑</span></div>
+  </div>
+</section>
+
+<hr class="rule z">
+
+<!-- WAITLIST -->
+
+<section id="waitlist" class="z waitlist-section">
+  <div class="waitlist-inner">
+    <div class="sec-label reveal">Early Access</div>
+    <div class="sec-title reveal">JOIN THE<br>ECOSYSTEM</div>
+    <p class="reveal">Get early access to Arena Protocol, the AI Auditor Bot, and SaaS tooling as they launch. No spam — ever.</p>
+    <div class="input-row reveal" id="wl-row">
+      <input id="wl-email" type="email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')joinWaitlist()"/>
+      <button class="btn btn-acid" onclick="joinWaitlist()" id="wl-btn">Join →</button>
+    </div>
+    <div class="waitlist-success" id="wl-ok"><span>YOU'RE IN</span><p>We'll reach out when early access opens</p></div>
+    <div class="waitlist-note reveal">MIT licensed · Free tier available · Pro plan live</div>
+  </div>
+</section>
+
+<footer class="z">
+  <div class="footer-logo">AGUNNAYA LABS</div>
+  <div class="footer-links">
+    <a href="https://github.com/Agunnaya-Labs/agunnaya-labs.github.io" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/apps/smart-contract-auditor-bot" target="_blank" rel="noopener">Auditor Bot</a>
+    <a href="https://v0-smart-contract-auditor-bot.vercel.app/" target="_blank" rel="noopener">Dashboard</a>
+    <a href="https://basescan.org" target="_blank" rel="noopener">BaseScan</a>
+    <a href="https://base.org" target="_blank" rel="noopener">Base</a>
+  </div>
+  <div class="footer-copy">© 2026 Agunnaya Labs · MIT License</div>
+</footer>
+
+<script>
+'use strict';
+/* ── CONFIG ──────────────────────────────────────────── */
+const FORMSPREE_ID = 'mzdyppdj';
+const BASE_RPC     = 'https://mainnet.base.org';
+const BASE_CHAIN   = '0x2105';
+const ARENA_TOKEN     = '0x3b855F88CB93aA642EaEB13F59987C552Fc614b5';
+const ARENA_CHAMPION  = '0x68f08b005b09B0F7D07E1c0B5CDe18E43CE2486A';
+const ARENA_BATTLE    = '0xF6fc2B6a306B626548ca9dF25B31a22D0f8971CF';
+// ★ Replace with your real Stripe Payment Link URLs (dashboard.stripe.com → Payment Links)
+const STRIPE_LINK      = 'https://buy.stripe.com/YOUR_PAYMENT_LINK';
+const STRIPE_LINK_DISC = 'https://buy.stripe.com/YOUR_DISCOUNTED_LINK';
+const ARENA_DISCOUNT_THRESHOLD = 1000n * (10n**18n); // 1000 ARENA
+const AUDIT_REPO = 'Agunnaya-Labs/agunnaya-labs.github.io';
+const SIG = {
+  name:'0x06fdde03', symbol:'0x95d89b41', totalSupply:'0x18160ddd',
+  decimals:'0x313ce567', balanceOf:'0x70a08231',
+  tokenURI:'0xc87b56dd', ownerOf:'0x6352211e',
+};
+const CONTRACTS = [
+  {name:'ArenaToken',type:'ERC-20',addr:'0x3b855F88CB93aA642EaEB13F59987C552Fc614b5'},
+  {name:'ArenaChampion',type:'ERC-721 NFT',addr:'0x68f08b005b09B0F7D07E1c0B5CDe18E43CE2486A'},
+  {name:'ArenaBattle',type:'Battle Engine',addr:'0xF6fc2B6a306B626548ca9dF25B31a22D0f8971CF'},
+  {name:'ArenaMarketplace',type:'Marketplace',addr:'0x67817157Dd6E5945ac2fAf1a822e7f1dE26C698E'},
+  {name:'ArenaPVP',type:'PvP System',addr:'0xd0C4Af12E95f9590e7314D079C58597771E57533'},
+];
+
+/* ── STATE ───────────────────────────────────────────── */
+let walletAddr=null,walletProv=null,panelOpen=false,arenaBal=0n;
+let nftFilter='all',nftAll=[],nftOwned=new Set(),nftPage=0;
+const NFT_PG=12;
+
+/* ── CURSOR ──────────────────────────────────────────── */
+const $c=document.getElementById('cur'),$cr=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;$c.style.left=mx+'px';$c.style.top=my+'px';});
+(function L(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;$cr.style.left=rx+'px';$cr.style.top=ry+'px';requestAnimationFrame(L);})();
+document.querySelectorAll('a,button,input').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));});
+
+/* ── CANVAS ──────────────────────────────────────────── */
+(()=>{const cv=document.getElementById('bg'),ctx=cv.getContext('2d');let W,H;const N=Array.from({length:55},()=>({x:Math.random()*2200-400,y:Math.random()*1400-100,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,r:Math.random()*1.4+.4}));const rsz=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight;};rsz();addEventListener('resize',rsz);(function D(){ctx.clearRect(0,0,W,H);N.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<-300)n.x=W+150;if(n.x>W+300)n.x=-150;if(n.y<-200)n.y=H+100;if(n.y>H+200)n.y=-100;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle='rgba(200,255,0,.55)';ctx.fill();});for(let i=0;i<N.length;i++)for(let j=i+1;j<N.length;j++){const dx=N[i].x-N[j].x,dy=N[i].y-N[j].y,d=Math.hypot(dx,dy);if(d<155){ctx.beginPath();ctx.moveTo(N[i].x,N[i].y);ctx.lineTo(N[j].x,N[j].y);ctx.strokeStyle=`rgba(0,170,255,${(1-d/155)*.1})`;ctx.lineWidth=.5;ctx.stroke();}}requestAnimationFrame(D);})();})();
+
+/* ── SCROLL / REVEAL ─────────────────────────────────── */
+const $pr=document.getElementById('progress'),$hd=document.getElementById('header');
+addEventListener('scroll',()=>{$pr.style.width=(scrollY/(document.body.scrollHeight-innerHeight)*100)+'%';$hd.classList.toggle('scrolled',scrollY>60);if(panelOpen)closePnl();},{passive:true});
+const io=new IntersectionObserver(e=>e.forEach(r=>{if(r.isIntersecting)r.target.classList.add('visible');}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ── MOBILE ──────────────────────────────────────────── */
+const $mob=document.getElementById('mob-menu'),$ham=document.getElementById('ham');
+function toggleMob(){$mob.classList.toggle('open');$ham.classList.toggle('open');}
+function closeMob(){$mob.classList.remove('open');$ham.classList.remove('open');}
+
+/* ── UTILS ───────────────────────────────────────────── */
+function sTo(id){document.querySelector(id)?.scrollIntoView({behavior:'smooth'});}
+let _tt;function showToast(m,d=3400){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),d);}
+function fmtTok(n,d=18){const s=n.toString().padStart(d+1,'0'),ip=s.slice(0,s.length-d)||'0',fp=s.slice(s.length-d,s.length-d+4),v=parseFloat(ip+'.'+fp);if(v>=1e9)return(v/1e9).toFixed(2)+'B';if(v>=1e6)return(v/1e6).toFixed(2)+'M';if(v>=1e3)return(v/1e3).toFixed(2)+'K';return v.toFixed(4);}
+function sAddr(a){return a.slice(0,6)+'…'+a.slice(-4);}
+function ago(ts){const s=Math.floor((Date.now()-ts)/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+
+/* ── RAW RPC ─────────────────────────────────────────── */
+async function rpc(m,p=[]){const r=await fetch(BASE_RPC,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:m,params:p})});const d=await r.json();if(d.error)throw new Error(d.error.message);return d.result;}
+async function call(to,data){return rpc('eth_call',[{to,data},'latest']);}
+function dStr(h){if(!h||h==='0x'||h.length<130)return'—';const r=h.slice(2),l=parseInt(r.slice(64,128),16);if(!l)return'';let s='';const c=r.slice(128,128+l*2);for(let i=0;i<c.length;i+=2)s+=String.fromCharCode(parseInt(c.slice(i,i+2),16));return s;}
+function dUint(h){if(!h||h==='0x')return 0n;return BigInt(h);}
+function eAddr(a){return'000000000000000000000000'+a.slice(2).toLowerCase();}
+function eU256(n){return n.toString(16).padStart(64,'0');}
+
+/* ── GAS ─────────────────────────────────────────────── */
+async function loadGas(){try{const h=await rpc('eth_gasPrice');document.getElementById('gas-display').textContent=(Number(BigInt(h))/1e9).toFixed(3)+' gwei';}catch{document.getElementById('gas-display').textContent='— gwei';}}
+
+/* ── TOKEN ───────────────────────────────────────────── */
+async function loadToken(){try{const[n,sy,su,de]=await Promise.all([call(ARENA_TOKEN,SIG.name),call(ARENA_TOKEN,SIG.symbol),call(ARENA_TOKEN,SIG.totalSupply),call(ARENA_TOKEN,SIG.decimals)]);const nm=dStr(n),sym=dStr(sy),dec=Number(dUint(de)),sup=dUint(su),sf=fmtTok(sup,dec);document.getElementById('tok-name').textContent=nm;document.getElementById('tok-symbol').textContent=sym;document.getElementById('tok-supply').textContent=sf;document.getElementById('tok-symbol2').textContent=sym;document.getElementById('tok-decimals').textContent=dec;document.getElementById('stat-supply').textContent=sf;}catch(e){['tok-name','tok-symbol','tok-supply','tok-decimals','stat-supply'].forEach(id=>document.getElementById(id).textContent='err');}}
+
+/* ── CONTRACTS TABLE ─────────────────────────────────── */
+function buildTable(){document.getElementById('contracts-tbody').innerHTML=CONTRACTS.map((c,i)=>`<tr data-i="${i}"><td><div class="ct-name">${c.name}</div><div class="ct-type">${c.type}</div></td><td><div class="ct-addr-wrap"><a class="ct-addr" href="https://basescan.org/address/${c.addr}" target="_blank" rel="noopener">${c.addr}</a><button class="copy-btn" onclick="copyAddr('${c.addr}',this)">copy</button></div></td><td class="ct-txn loading">···</td><td class="ct-status"><span class="badge"><span class="badge-dot"></span>Verified</span></td></tr>`).join('');}
+async function loadTxCounts(){let tot=0;for(let i=0;i<CONTRACTS.length;i++){const c=CONTRACTS[i],row=document.querySelector(`tr[data-i="${i}"]`),cell=row?.querySelector('.ct-txn');try{const r=await fetch(`https://api.basescan.org/api?module=proxy&action=eth_getTransactionCount&address=${c.addr}&tag=latest`);const d=await r.json();const n=d.result?parseInt(d.result,16):0;tot+=n;if(cell){cell.textContent=n.toLocaleString();cell.classList.remove('loading');}}catch{if(cell){cell.textContent='—';cell.classList.remove('loading');}}await new Promise(r=>setTimeout(r,300));}const el=document.getElementById('stat-txns');if(el)el.textContent=tot>0?tot.toLocaleString():'—';}
+function copyAddr(addr,btn){navigator.clipboard.writeText(addr).then(()=>{btn.textContent='✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='copy';btn.classList.remove('copied');},2000);}).catch(()=>showToast('Copy failed'));}
+
+/* ── GITHUB ──────────────────────────────────────────── */
+async function loadGitHub(){try{const r=await fetch(`https://api.github.com/repos/${AUDIT_REPO}`);const d=await r.json();const s=d.stargazers_count??0,f=d.forks_count??0;document.getElementById('gh-stars-txt').textContent=s+' stars';document.getElementById('gh-forks-txt').textContent=f+' forks';document.getElementById('stat-stars').textContent=s;}catch{document.getElementById('stat-stars').textContent='—';}}
+
+/* ══════════════════════════════════════
+   LEADERBOARD
+══════════════════════════════════════ */
+async function loadLeaderboard(manual=false){
+  const btn=document.getElementById('lb-btn');
+  if(manual)btn.classList.add('spinning');
+  try{
+    const latH=await rpc('eth_blockNumber');
+    const from='0x'+Math.max(0,parseInt(latH,16)-50000).toString(16);
+    const logs=await rpc('eth_getLogs',[{address:ARENA_BATTLE,fromBlock:from,toBlock:'latest'}]);
+    const stats={};
+    for(const log of logs){
+      if(log.topics.length<3)continue;
+      const w='0x'+log.topics[1].slice(26),l='0x'+log.topics[2].slice(26);
+      if(!stats[w])stats[w]={wins:0,losses:0};
+      if(!stats[l])stats[l]={wins:0,losses:0};
+      stats[w].wins++;stats[l].losses++;
+    }
+    const entries=Object.entries(stats);
+    const ranked=entries.length>0
+      ?entries.map(([a,s])=>({addr:a,wins:s.wins,losses:s.losses,rate:s.wins/(s.wins+s.losses)})).sort((a,b)=>b.wins-a.wins).slice(0,20)
+      :demoBoard();
+    renderPodium(ranked);renderLbTable(ranked);
+    document.getElementById('lb-status').textContent=(entries.length>0?'Live data':'Demo data')+' · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  }catch{const d=demoBoard();renderPodium(d);renderLbTable(d);document.getElementById('lb-status').textContent='Chain unavailable · demo';}
+  finally{btn.classList.remove('spinning');}
+}
+function demoBoard(){
+  const addrs=['0x3b855F88CB93aA642EaEB13F59987C552Fc614b5','0x68f08b005b09B0F7D07E1c0B5CDe18E43CE2486A','0xF6fc2B6a306B626548ca9dF25B31a22D0f8971CF','0x67817157Dd6E5945ac2fAf1a822e7f1dE26C698E','0xd0C4Af12E95f9590e7314D079C58597771E57533','0x1111111111111111111111111111111111111111','0x2222222222222222222222222222222222222222','0x3333333333333333333333333333333333333333'];
+  const w=[42,38,31,28,22,19,14,9],l=[5,8,11,14,10,13,9,7];
+  return addrs.map((a,i)=>({addr:a,wins:w[i],losses:l[i],rate:w[i]/(w[i]+l[i])}));
+}
+function rClass(r){return r>=.65?'rate-hot':r>=.45?'rate-mid':'rate-cold';}
+function renderPodium(r){
+  const order=[r[1],r[0],r[2]],ranks=[2,1,3],crowns=['🥈','👑','🥉'];
+  document.getElementById('lb-podium').innerHTML=order.map((p,i)=>{
+    if(!p)return`<div class="podium-card rank-${ranks[i]}"></div>`;
+    const pct=Math.round(p.rate*100);
+    return`<div class="podium-card rank-${ranks[i]}"><div class="podium-crown">${crowns[i]}</div><div class="podium-rank">${ranks[i]}</div><div class="podium-addr">${sAddr(p.addr)}</div><div class="podium-wins">${p.wins}</div><div class="podium-wl">${p.wins}W · ${p.losses}L</div><span class="podium-rate ${rClass(p.rate)}">${pct}% WR</span></div>`;
+  }).join('');
+}
+function renderLbTable(r){
+  if(!r.length){document.getElementById('lb-tbody').innerHTML=`<tr><td colspan="5" class="lb-empty">No battles yet</td></tr>`;return;}
+  document.getElementById('lb-tbody').innerHTML=r.map((p,i)=>`<tr><td class="lb-rank-cell${i<3?' top3':''}">${i+1}</td><td><a class="lb-addr" href="https://basescan.org/address/${p.addr}" target="_blank" rel="noopener">${sAddr(p.addr)}</a></td><td class="lb-wins">${p.wins}</td><td class="lb-losses">${p.losses}</td><td><div class="lb-rate-bar"><div class="lb-bar-track"><div class="lb-bar-fill" style="width:${Math.round(p.rate*100)}%"></div></div><span class="lb-rate-pct">${Math.round(p.rate*100)}%</span></div></td></tr>`).join('');
+}
+
+/* ══════════════════════════════════════
+   NFT GALLERY
+══════════════════════════════════════ */
+async function loadNftGallery(){
+  try{
+    const h=await call(ARENA_CHAMPION,SIG.totalSupply);
+    const total=Number(dUint(h));
+    document.getElementById('nft-count').textContent=total>0?total+' champions minted':'No champions minted yet';
+    if(total===0){document.getElementById('nft-grid').innerHTML=`<div class="nft-prompt"><p>No champions minted yet — battle contracts are live on Base mainnet.</p></div>`;return;}
+    nftAll=Array.from({length:Math.min(total,48)},(_,i)=>i+1);
+    nftPage=0;
+    if(walletAddr)await resolveOwned(nftAll);
+    renderNftPage();
+    if(total>NFT_PG)document.getElementById('nft-more').style.display='inline-flex';
+  }catch{renderDemoNfts();}
+}
+async function resolveOwned(ids){
+  nftOwned=new Set();
+  for(let i=0;i<ids.length;i+=8){
+    const chunk=ids.slice(i,i+8);
+    const res=await Promise.allSettled(chunk.map(id=>call(ARENA_CHAMPION,SIG.ownerOf+eU256(id))));
+    res.forEach((r,j)=>{if(r.status==='fulfilled'){const own='0x'+r.value.slice(-40);if(own.toLowerCase()===walletAddr.toLowerCase())nftOwned.add(chunk[j]);}});
+  }
+}
+async function fetchMeta(id){
+  try{
+    const h=await call(ARENA_CHAMPION,SIG.tokenURI+eU256(id));
+    const uri=dStr(h);if(!uri||uri==='—')return null;
+    if(uri.startsWith('data:application/json;base64,'))return JSON.parse(atob(uri.slice(29)));
+    const url=uri.replace('ipfs://','https://ipfs.io/ipfs/');
+    return await(await fetch(url)).json();
+  }catch{return null;}
+}
+function renderNftPage(){
+  const tokens=nftFilter==='owned'?nftAll.filter(id=>nftOwned.has(id)):nftAll;
+  const page=tokens.slice(0,NFT_PG*(nftPage+1));
+  const grid=document.getElementById('nft-grid');
+  if(!page.length){grid.innerHTML=`<div class="nft-prompt"><p>${nftFilter==='owned'?'Connect your wallet to see your champions.':'No champions to display.'}</p><button class="btn btn-outline" onclick="connectWallet()">Connect Wallet</button></div>`;return;}
+  grid.innerHTML=page.map(id=>`<div class="nft-card" onclick="openNftModal(${id})"><div class="nft-img-wrap"><div class="nft-img-placeholder" id="nip-${id}">⚔️</div>${nftOwned.has(id)?'<div class="nft-owned-badge">YOURS</div>':''}</div><div class="nft-info"><div class="nft-name">Champion #${id}</div><div class="nft-id">Token ID: ${id}</div><div class="nft-traits" id="ntr-${id}"><span class="nft-trait">Loading…</span></div></div></div>`).join('');
+  page.forEach(id=>loadNftCardMeta(id));
+  document.getElementById('nft-more').style.display=page.length<tokens.length?'inline-flex':'none';
+}
+async function loadNftCardMeta(id){
+  const m=await fetchMeta(id);if(!m)return;
+  const ip=document.getElementById(`nip-${id}`),tr=document.getElementById(`ntr-${id}`);if(!ip)return;
+  if(m.image)ip.outerHTML=`<img src="${m.image.replace('ipfs://','https://ipfs.io/ipfs/')}" alt="Champion #${id}" loading="lazy"/>`;
+  if(m.attributes&&tr)tr.innerHTML=m.attributes.slice(0,3).map(a=>`<span class="nft-trait">${a.trait_type}: <span>${a.value}</span></span>`).join('');
+}
+function renderDemoNfts(){
+  const D=[{id:1,e:'⚔️',n:'Blade Sovereign',t:[['Class','Warrior'],['Power','9200'],['Rarity','Legendary']]},{id:2,e:'🔥',n:'Inferno Mage',t:[['Class','Mage'],['Power','8700'],['Rarity','Epic']]},{id:3,e:'🛡️',n:'Iron Bulwark',t:[['Class','Tank'],['Power','8100'],['Rarity','Rare']]},{id:4,e:'⚡',n:'Storm Ranger',t:[['Class','Archer'],['Power','7800'],['Rarity','Rare']]},{id:5,e:'💀',n:'Shadow Reaper',t:[['Class','Assassin'],['Power','8400'],['Rarity','Epic']]},{id:6,e:'🌊',n:'Tide Caller',t:[['Class','Shaman'],['Power','7500'],['Rarity','Common']]}];
+  document.getElementById('nft-count').textContent='Demo · mint live on Base';
+  document.getElementById('nft-grid').innerHTML=D.map(d=>`<div class="nft-card" onclick="openDemoModal(${d.id})"><div class="nft-img-wrap"><div class="nft-img-placeholder" style="font-size:4rem">${d.e}</div></div><div class="nft-info"><div class="nft-name">${d.n}</div><div class="nft-id">Token #${d.id} · Demo</div><div class="nft-traits">${d.t.map(t=>`<span class="nft-trait">${t[0]}: <span>${t[1]}</span></span>`).join('')}</div></div></div>`).join('');
+}
+function loadMoreNfts(){nftPage++;renderNftPage();}
+function setNftFilter(f,el){nftFilter=f;document.querySelectorAll('.nft-filter').forEach(b=>b.classList.remove('active'));el.classList.add('active');nftPage=0;if(f==='owned'&&!walletAddr){showToast('Connect wallet to see your champions');return;}renderNftPage();}
+async function openNftModal(id){
+  const m=document.getElementById('nft-modal');m.classList.add('open');
+  document.getElementById('modal-name').textContent='Champion #'+id;
+  document.getElementById('modal-sub').textContent='ArenaChampion · Token ID '+id+' · Base Mainnet';
+  document.getElementById('modal-traits').innerHTML='<div style="color:var(--dim);font-family:var(--ff-m);font-size:.63rem;grid-column:1/-1">Loading metadata…</div>';
+  document.getElementById('modal-img-wrap').innerHTML='<div class="nft-modal-img-ph">⚔️</div>';
+  document.getElementById('modal-os').href=`https://opensea.io/assets/base/${ARENA_CHAMPION}/${id}`;
+  document.getElementById('modal-bs').href=`https://basescan.org/token/${ARENA_CHAMPION}?a=${id}`;
+  const meta=await fetchMeta(id);
+  if(meta){
+    document.getElementById('modal-name').textContent=meta.name||'Champion #'+id;
+    if(meta.image){const img=new Image();img.src=meta.image.replace('ipfs://','https://ipfs.io/ipfs/');img.style.cssText='width:100%;height:100%;object-fit:cover';document.getElementById('modal-img-wrap').innerHTML='';document.getElementById('modal-img-wrap').appendChild(img);}
+    if(meta.attributes)document.getElementById('modal-traits').innerHTML=meta.attributes.map(a=>`<div class="nft-modal-trait"><div class="nmt-key">${a.trait_type}</div><div class="nmt-val">${a.value}</div></div>`).join('');
+    else document.getElementById('modal-traits').innerHTML='';
+  }else{document.getElementById('modal-traits').innerHTML='<div style="color:var(--dim);font-family:var(--ff-m);font-size:.63rem;grid-column:1/-1">No on-chain metadata</div>';}
+}
+const DEMO_META={1:{n:'Blade Sovereign',e:'⚔️',t:[['Class','Warrior'],['Power','9200'],['Rarity','Legendary'],['Weapon','Greatsword'],['Armor','Dragonscale'],['Origin','Base']]},2:{n:'Inferno Mage',e:'🔥',t:[['Class','Mage'],['Power','8700'],['Rarity','Epic'],['Weapon','Staff of Flames'],['Armor','Arcane Robes'],['Origin','Base']]}};
+function openDemoModal(id){
+  const d=DEMO_META[id]||{n:'Champion #'+id,e:'⚔️',t:[]};
+  const m=document.getElementById('nft-modal');m.classList.add('open');
+  document.getElementById('modal-name').textContent=d.n;
+  document.getElementById('modal-sub').textContent='ArenaChampion · Demo · Base Mainnet';
+  document.getElementById('modal-img-wrap').innerHTML=`<div class="nft-modal-img-ph" style="font-size:6rem">${d.e}</div>`;
+  document.getElementById('modal-traits').innerHTML=d.t.map(t=>`<div class="nft-modal-trait"><div class="nmt-key">${t[0]}</div><div class="nmt-val">${t[1]}</div></div>`).join('');
+  document.getElementById('modal-os').href='#';
+  document.getElementById('modal-bs').href=`https://basescan.org/token/${ARENA_CHAMPION}`;
+}
+function closeNftModal(){document.getElementById('nft-modal').classList.remove('open');}
+document.getElementById('nft-modal').addEventListener('click',e=>{if(e.target===document.getElementById('nft-modal'))closeNftModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeNftModal();});
+
+/* ══════════════════════════════════════
+   AUDIT FEED
+══════════════════════════════════════ */
+const SEV_KW={critical:['selfdestruct','delegatecall','proxy'],high:['reentrancy','overflow','tx.origin','access'],medium:['unchecked','timestamp','oracle'],low:['gas','emit','visibility','natspec']};
+const DET={critical:'Selfdestruct / Proxy Risk',high:'Reentrancy / Access Control',medium:'Unchecked / Oracle',low:'Gas / Visibility',info:'Static Analysis Pass'};
+function gSev(txt){const t=txt.toLowerCase();for(const[s,kw]of Object.entries(SEV_KW))if(kw.some(k=>t.includes(k)))return s;return'info';}
+async function loadAuditFeed(){
+  try{
+    const[cR,iR]=await Promise.all([fetch(`https://api.github.com/repos/${AUDIT_REPO}/commits?per_page=20`),fetch(`https://api.github.com/repos/${AUDIT_REPO}/issues?state=all&per_page=10`)]);
+    const commits=cR.ok?await cR.json():[],issues=iR.ok?await iR.json():[];
+    const items=[];
+    for(const c of commits.slice(0,12)){const msg=c.commit.message.split('\n')[0],sev=gSev(msg);items.push({sev,det:DET[sev],repo:AUDIT_REPO,desc:msg.slice(0,120),ts:new Date(c.commit.author.date).getTime(),url:c.html_url,ref:c.sha.slice(0,7)});}
+    for(const iss of issues){const sev=gSev(iss.title);items.push({sev,det:DET[sev],repo:AUDIT_REPO,desc:iss.title.slice(0,120),ts:new Date(iss.created_at).getTime(),url:iss.html_url,ref:'#'+iss.number});}
+    items.sort((a,b)=>b.ts-a.ts);
+    renderFeed(items.slice(0,12));renderFeedStats(items);
+  }catch{renderDemoFeed();}
+}
+function renderFeed(items){
+  const f=document.getElementById('audit-feed');
+  if(!items.length){f.innerHTML=`<div class="lb-empty">No events found</div>`;return;}
+  f.innerHTML=items.map(it=>`<div class="audit-entry"><div class="audit-sev sev-${it.sev}">${it.sev.toUpperCase()}</div><div><div class="audit-detector">${it.det}</div><div class="audit-repo">${it.repo}</div><div class="audit-desc">${it.desc}</div></div><div class="audit-meta"><div class="audit-time">${ago(it.ts)}</div><a href="${it.url}" target="_blank" rel="noopener"><div class="audit-pr">${it.ref} ↗</div></a></div></div>`).join('');
+}
+function renderFeedStats(items){
+  document.getElementById('as-total').textContent=items.length;
+  document.getElementById('as-critical').textContent=items.filter(i=>i.sev==='critical').length;
+  document.getElementById('as-high').textContent=items.filter(i=>i.sev==='high').length;
+  document.getElementById('as-clean').textContent=items.filter(i=>i.sev==='info'||i.sev==='low').length;
+}
+function renderDemoFeed(){
+  const D=[{sev:'critical',det:'Selfdestruct / Proxy Risk',repo:'user/defi-protocol',desc:'Unprotected selfdestruct in LiquidityPool.sol — attacker can drain contract',ts:Date.now()-3600000,url:'#',ref:'PR #42'},{sev:'high',det:'Reentrancy / Access Control',repo:'dao/governance-v2',desc:'Reentrancy in withdraw() — missing ReentrancyGuard modifier',ts:Date.now()-7200000,url:'#',ref:'PR #38'},{sev:'medium',det:'Unchecked / Oracle',repo:'nft/marketplace',desc:'Unchecked return value on external call in fulfillOrder()',ts:Date.now()-14400000,url:'#',ref:'PR #21'},{sev:'high',det:'Reentrancy / Access Control',repo:'yield/vault-v3',desc:'tx.origin used for auth — susceptible to phishing attacks',ts:Date.now()-86400000,url:'#',ref:'PR #17'},{sev:'low',det:'Gas / Visibility',repo:'token/erc20-base',desc:'Public state variables could be private — gas optimization',ts:Date.now()-172800000,url:'#',ref:'PR #9'},{sev:'info',det:'Static Analysis Pass',repo:'bridge/cross-chain',desc:'All 6 detectors passed — no vulnerabilities found in PR diff',ts:Date.now()-259200000,url:'#',ref:'PR #5'}];
+  renderFeed(D);renderFeedStats(D);
+}
+
+/* ══════════════════════════════════════
+   STRIPE PRO
+══════════════════════════════════════ */
+function isHolder(){return arenaBal>=ARENA_DISCOUNT_THRESHOLD;}
+function updateProUI(){
+  const h=isHolder();
+  document.getElementById('pro-disc').classList.toggle('show',h);
+  document.getElementById('holder-note').classList.toggle('show',h);
+  if(h){document.getElementById('pro-price-n').textContent='39';document.getElementById('pro-orig').textContent='$49/mo';}
+  else{document.getElementById('pro-price-n').textContent='49';document.getElementById('pro-orig').innerHTML='&nbsp;';}
+}
+function startCheckout(){
+  const btn=document.getElementById('pro-btn');
+  if(STRIPE_LINK.includes('YOUR_PAYMENT_LINK')){showToast('⚠️ Set your Stripe Payment Link in the config to enable checkout',4500);return;}
+  let url=(isHolder()?STRIPE_LINK_DISC:STRIPE_LINK);
+  if(walletAddr)url+=`?client_reference_id=${walletAddr}`;
+  btn.textContent='Opening checkout…';btn.disabled=true;
+  setTimeout(()=>{btn.textContent='Upgrade to Pro →';btn.disabled=false;},3000);
+  window.open(url,'_blank','noopener');
+}
+
+/* ══════════════════════════════════════
+   WALLET
+══════════════════════════════════════ */
+function toggleWalletPanel(){if(!walletAddr){connectWallet();return;}panelOpen=!panelOpen;document.getElementById('wallet-panel').classList.toggle('open',panelOpen);}
+function closePnl(){panelOpen=false;document.getElementById('wallet-panel').classList.remove('open');}
+document.addEventListener('click',e=>{const p=document.getElementById('wallet-panel'),b=document.getElementById('wallet-btn');if(!p.contains(e.target)&&!b.contains(e.target))closePnl();});
+async function connectWallet(){
+  if(!window.ethereum){showToast('⚠️ MetaMask not detected');return;}
+  try{
+    const prov=new ethers.BrowserProvider(window.ethereum);
+    await prov.send('eth_requestAccounts',[]);
+    const signer=await prov.getSigner(),addr=await signer.getAddress(),net=await prov.getNetwork();
+    walletAddr=addr;walletProv=prov;
+    const btn=document.getElementById('wallet-btn');btn.textContent=sAddr(addr);btn.classList.add('connected');
+    document.getElementById('wp-addr').textContent=sAddr(addr);
+    const onBase=net.chainId===8453n;
+    const ne=document.getElementById('wp-net');ne.textContent=onBase?'Base Mainnet ✓':`Wrong network (${net.chainId})`;ne.style.color=onBase?'var(--green)':'var(--red)';
+    const eb=await prov.getBalance(addr);document.getElementById('wp-eth').textContent=parseFloat(ethers.formatEther(eb)).toFixed(4)+' ETH';
+    try{const bh=await call(ARENA_TOKEN,SIG.balanceOf+eAddr(addr));arenaBal=dUint(bh);document.getElementById('wp-arena').textContent=fmtTok(arenaBal,18)+' ARENA';}catch{document.getElementById('wp-arena').textContent='—';}
+    updateProUI();
+    if(nftAll.length){await resolveOwned(nftAll);renderNftPage();}
+    showToast('✅ Connected: '+sAddr(addr));
+    if(!onBase)showToast('⚠️ Switch to Base Mainnet',4500);
+    window.ethereum.on('accountsChanged',a=>{if(!a.length)disconnectWallet();else{walletAddr=null;connectWallet();}});
+    window.ethereum.on('chainChanged',()=>location.reload());
+  }catch(e){if(e.code!==4001)showToast('⚠️ Connection failed');}
+}
+async function switchToBase(){if(!window.ethereum)return;try{await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:BASE_CHAIN}]});}catch(e){if(e.code===4902)await window.ethereum.request({method:'wallet_addEthereumChain',params:[{chainId:BASE_CHAIN,chainName:'Base',nativeCurrency:{name:'Ether',symbol:'ETH',decimals:18},rpcUrls:['https://mainnet.base.org'],blockExplorerUrls:['https://basescan.org']}]});}}
+function disconnectWallet(){walletAddr=null;walletProv=null;arenaBal=0n;const b=document.getElementById('wallet-btn');b.textContent='Connect Wallet';b.classList.remove('connected','wrong-net');closePnl();updateProUI();showToast('Wallet disconnected');}
+
+/* ══════════════════════════════════════
+   WAITLIST
+══════════════════════════════════════ */
+async function joinWaitlist(){
+  const inp=document.getElementById('wl-email'),btn=document.getElementById('wl-btn'),email=inp.value.trim();
+  if(!email){showToast('⚠️ Enter your email');inp.focus();return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showToast('⚠️ Invalid email');inp.focus();return;}
+  btn.textContent='···';btn.disabled=true;
+  try{
+    const r=await fetch(`https://formspree.io/f/${FORMSPREE_ID}`,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({email,source:'agunnaya-labs-landing',ts:new Date().toISOString()})});
+    if(r.ok){document.getElementById('wl-row').style.display='none';document.getElementById('wl-ok').classList.add('show');}
+    else{const d=await r.json().catch(()=>({}));showToast('⚠️ '+(d?.errors?.[0]?.message||'Submission failed'));btn.textContent='Join →';btn.disabled=false;}
+  }catch{showToast('⚠️ Network error');btn.textContent='Join →';btn.disabled=false;}
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+async function init(){
+  buildTable();
+  await Promise.allSettled([loadGas(),loadToken(),loadGitHub()]);
+  loadTxCounts();
+  await Promise.allSettled([loadLeaderboard(),loadNftGallery(),loadAuditFeed()]);
+  setInterval(loadGas,15000);
+  setInterval(loadAuditFeed,120000);
+}
+init();
+</script>
+
+</body>
+</html>

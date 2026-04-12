@@ -28,6 +28,30 @@ Also contains the **Agunnaya Labs (AGL) Token Launch System** — a complete ERC
 
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
 
+## Agunnaya Labs Web App
+
+Located at `artifacts/agunnaya-labs/`. React + Vite + TypeScript + Tailwind + ethers.js.
+
+### AGL Token
+- Contract: `0xEA1221B4d80A89BD8C75248Fae7c176BD1854698` — Base Mainnet
+- 1,000,000,000 fixed supply · ERC-20 · Verified on BaseScan
+
+### Site Sections
+- **Hero** — Live gas price, live AGL total supply, GitHub star count
+- **AI Security** — Smart contract auditor bot (GitHub App install link)
+- **Arena** — 4 live contracts table with copy addresses, AGL token panel with on-chain data
+- **Leaderboard** — On-chain battle rankings, animated podium, win-rate bars
+- **NFT Gallery** — ArenaChampion ERC-721 gallery with filter + modal
+- **Audit Feed** — Live vulnerability scan results terminal, severity color-coded
+- **Pro** — Free vs Pro pricing, Formspree waitlist (`mzdyppdj`)
+- **SaaS Roadmap** — Upcoming platform features
+- **Waitlist** — Email capture via Formspree
+
+### Design
+- Colors: acid green `#c8ff00`, ink `#04070e`, sky `#00aaff`
+- Fonts: Bebas Neue (display), DM Sans (body), DM Mono (mono)
+- Custom animated cursor, star canvas background, scroll progress bar, scroll-triggered reveals
+
 ## AGL Token Launch System
 
 Located at `artifacts/agl-token/`. Self-contained Node.js project (not part of the pnpm workspace).
