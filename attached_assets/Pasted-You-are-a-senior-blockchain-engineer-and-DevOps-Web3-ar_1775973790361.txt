@@ -1,0 +1,111 @@
+You are a senior blockchain engineer and DevOps Web3 architect.
+
+Build a complete production-ready token launch system for:
+
+PROJECT NAME: Agunnaya Labs  
+TOKEN SYMBOL: AGL  
+CHAIN: Base (Ethereum L2)
+
+OFFICIAL LINKS:
+- X (Twitter): https://x.com/agunnaya001
+- GitHub: https://github.com/agunnaya001
+
+---
+
+GOAL:
+Create a fully working, secure, and automated token deployment system that includes:
+
+1. ERC-20 SMART CONTRACT
+- Solidity ^0.8.20
+- OpenZeppelin ERC20 + Ownable
+- Fixed supply: 1,000,000,000 AGL
+- No taxes, no blacklist, no honeypot logic
+- No proxy upgrade system
+- Fully transparent and audit-friendly
+
+---
+
+2. FULL DEVOPS LAUNCH SYSTEM (ONE COMMAND)
+Create a system where running:
+
+npm run launch
+
+does ALL of the following:
+
+A. Deploy contract to Base mainnet  
+B. Output contract address  
+C. Verify contract on BaseScan automatically  
+D. Upload token logo image to IPFS (Pinata or equivalent)  
+E. Upload metadata JSON to IPFS  
+F. Generate liquidity plan for Uniswap (Base)  
+G. Print full launch summary  
+
+---
+
+3. IPFS METADATA REQUIREMENTS
+Generate metadata JSON including:
+
+- name: Agunnaya Labs
+- symbol: AGL
+- description: AI-powered smart contract security research token on Base
+- image: ipfs logo hash
+- external_url: https://x.com/agunnaya001
+- github: https://github.com/agunnaya001
+
+Also generate:
+- token logo design prompt (futuristic AI blockchain aesthetic, neon blue/green, AGL symbol, cyber lab theme)
+
+---
+
+4. LIQUIDITY MODULE
+Generate a liquidity deployment plan for Uniswap (Base):
+- AGL / WETH pair
+- recommended initial liquidity size
+- warning to lock LP tokens
+- anti-rug best practices
+
+---
+
+5. CONTRACT VERIFICATION
+Provide BaseScan verification steps:
+- compiler version
+- optimization settings
+- constructor handling
+- exact verification flow
+
+---
+
+6. SECURITY REQUIREMENTS
+- no hidden mint functions
+- no tax logic
+- no blacklist/whitelist traps
+- no upgradeable proxy contracts
+- OpenZeppelin only
+- clean and minimal code
+- production-safe deployment
+
+---
+
+7. OUTPUT FORMAT (STRICT)
+
+Return:
+
+A. Solidity ERC-20 contract  
+B. Hardhat config (Base network ready)  
+C. deploy.js script  
+D. launch.js master automation script (single command orchestrator)  
+E. IPFS upload script (logo + metadata)  
+F. liquidity.js module  
+G. package.json scripts  
+H. metadata JSON example  
+I. BaseScan verification instructions  
+J. full system architecture diagram (text-based)
+
+---
+
+IMPORTANT:
+- Keep everything production-grade and realistic
+- Do NOT include scam mechanics or taxes
+- Ensure code is deployable without modifications
+- Ensure security-first design
+- Ensure clean GitHub-ready structure

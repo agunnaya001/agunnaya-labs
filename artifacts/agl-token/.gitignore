@@ -1,0 +1,8 @@
+node_modules/
+artifacts/
+cache/
+typechain-types/
+.env
+deployment.json
+ipfs.json
+liquidity-plan.json

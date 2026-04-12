@@ -1,0 +1,13 @@
+{
+  "name": "Agunnaya Labs",
+  "symbol": "AGL",
+  "description": "AI-powered smart contract security research token on Base. Agunnaya Labs builds transparent, audit-friendly Web3 security tooling.",
+  "image": "ipfs://REPLACE_WITH_LOGO_IPFS_HASH",
+  "external_url": "https://x.com/agunnaya001",
+  "github": "https://github.com/agunnaya001",
+  "decimals": 18,
+  "chainId": 8453,
+  "chain": "Base",
+  "tags": ["AI", "security", "DeFi", "Base", "research"],
+  "_note": "Upload this file to IPFS after replacing the image hash. Run: npm run ipfs"
+}
