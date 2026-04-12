@@ -20,29 +20,34 @@ module.exports = {
       url: process.env.BASE_RPC_URL || "https://mainnet.base.org",
       accounts: [PRIVATE_KEY],
       chainId: 8453,
-      gasPrice: "auto",
+      // Use explicit minimal gas for Base L2 — much cheaper than Ethereum mainnet
+      // maxFeePerGas: 0.015 gwei (well above current ~0.006-0.011 gwei base fee)
+      // maxPriorityFeePerGas: 0.001 gwei (minimal tip)
+      maxFeePerGas: 15000000,        // 0.015 gwei in wei
+      maxPriorityFeePerGas: 1000000, // 0.001 gwei in wei
+      gas: 800000,                   // explicit gas limit — avoids over-estimation
     },
     "base-sepolia": {
       url: "https://sepolia.base.org",
       accounts: [PRIVATE_KEY],
       chainId: 84532,
-      gasPrice: "auto",
+      maxFeePerGas: 15000000,
+      maxPriorityFeePerGas: 1000000,
+      gas: 800000,
     },
     hardhat: {
       chainId: 1337,
     },
   },
   etherscan: {
-    apiKey: {
-      base: BASESCAN_API_KEY,
-      "base-sepolia": BASESCAN_API_KEY,
-    },
+    // Etherscan V2: single key, chain-aware routing
+    apiKey: BASESCAN_API_KEY,
     customChains: [
       {
         network: "base",
         chainId: 8453,
         urls: {
-          apiURL: "https://api.basescan.org/api",
+          apiURL: "https://api.etherscan.io/v2/api?chainid=8453",
           browserURL: "https://basescan.org",
         },
       },
@@ -50,7 +55,7 @@ module.exports = {
         network: "base-sepolia",
         chainId: 84532,
         urls: {
-          apiURL: "https://api-sepolia.basescan.org/api",
+          apiURL: "https://api.etherscan.io/v2/api?chainid=84532",
           browserURL: "https://sepolia.basescan.org",
         },
       },
