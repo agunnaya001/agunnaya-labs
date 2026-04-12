@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
+import { ToastProvider, useToast } from './context/ToastContext';
+import { ProviderCtxProvider } from './context/ProviderContext';
 import CustomCursor from './components/CustomCursor';
 import BgCanvas from './components/BgCanvas';
 import Header from './components/Header';
@@ -12,6 +14,8 @@ import ProSection from './components/ProSection';
 import SaasSection from './components/SaasSection';
 import WaitlistSection from './components/WaitlistSection';
 import SiteFooter from './components/SiteFooter';
+import BackToTop from './components/BackToTop';
+import MobileWalletBar from './components/MobileWalletBar';
 import { useWallet } from './hooks/useWallet';
 import { useReveal } from './hooks/useReveal';
 
@@ -23,22 +27,28 @@ function ProgressBar() {
       const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
       bar.style.width = pct + '%';
     };
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
   return <div id="progress-bar" className="progress-bar" />;
 }
 
-export default function App() {
+function AppInner() {
   const wallet = useWallet();
+  const { show } = useToast();
   useReveal();
+
+  const onToast = useCallback((msg: string, type?: 'default'|'success'|'error'|'warning') => {
+    show(msg, type);
+  }, [show]);
 
   return (
     <>
       <CustomCursor />
       <BgCanvas />
       <ProgressBar />
-      <Header wallet={wallet} />
+      <Header wallet={wallet} onToast={onToast} />
+      <MobileWalletBar wallet={wallet} />
 
       <main>
         <HeroSection />
@@ -61,6 +71,17 @@ export default function App() {
       </main>
 
       <SiteFooter />
+      <BackToTop />
     </>
+  );
+}
+
+export default function App() {
+  return (
+    <ProviderCtxProvider>
+      <ToastProvider>
+        <AppInner />
+      </ToastProvider>
+    </ProviderCtxProvider>
   );
 }

@@ -12,6 +12,12 @@ export interface WalletState {
   isWrongNetwork: boolean;
 }
 
+type EthWindow = { ethereum?: ethers.Eip1193Provider & {
+  on?: (e: string, cb: (...args: unknown[]) => void) => void;
+  removeListener?: (e: string, cb: (...args: unknown[]) => void) => void;
+  request?: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
+}};
+
 export function useWallet() {
   const [state, setState] = useState<WalletState>({
     address: null, network: null, chainId: null,
@@ -46,8 +52,11 @@ export function useWallet() {
   }, []);
 
   const connect = useCallback(async () => {
-    const win = window as unknown as { ethereum?: ethers.Eip1193Provider };
-    if (!win.ethereum) { alert('MetaMask not found. Install it at metamask.io'); return; }
+    const win = window as unknown as EthWindow;
+    if (!win.ethereum) {
+      window.open('https://metamask.io/download/', '_blank');
+      return;
+    }
     try {
       const provider = new ethers.BrowserProvider(win.ethereum);
       await provider.send('eth_requestAccounts', []);
@@ -60,25 +69,49 @@ export function useWallet() {
   }, []);
 
   const switchToBase = useCallback(async () => {
-    const win = window as unknown as { ethereum?: ethers.Eip1193Provider };
-    if (!win.ethereum) return;
+    const win = window as unknown as EthWindow;
+    if (!win.ethereum?.request) return;
     try {
-      await (win.ethereum as unknown as { request: (args: unknown) => Promise<unknown> }).request({
-        method: 'wallet_switchEthereumChain', params: [{ chainId: BASE_CHAIN_HEX }]
-      });
+      await win.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: BASE_CHAIN_HEX }] });
     } catch (err: unknown) {
       const e = err as { code?: number };
       if (e.code === 4902) {
-        await (win.ethereum as unknown as { request: (args: unknown) => Promise<unknown> }).request({
+        await win.ethereum.request?.({
           method: 'wallet_addEthereumChain',
-          params: [{ chainId: BASE_CHAIN_HEX, chainName: 'Base', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 }, rpcUrls: ['https://mainnet.base.org'], blockExplorerUrls: ['https://basescan.org'] }]
+          params: [{ chainId: BASE_CHAIN_HEX, chainName: 'Base Mainnet', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 }, rpcUrls: ['https://mainnet.base.org'], blockExplorerUrls: ['https://basescan.org'] }]
         });
       }
     }
   }, []);
 
+  const addAGLToWallet = useCallback(async () => {
+    const win = window as unknown as EthWindow;
+    if (!win.ethereum?.request) return false;
+    try {
+      const result = await win.ethereum.request({
+        method: 'wallet_watchAsset',
+        params: [{
+          type: 'ERC20',
+          options: { address: AGL_TOKEN, symbol: 'AGL', decimals: 18, image: '' },
+        }] as unknown[],
+      });
+      return !!result;
+    } catch { return false; }
+  }, []);
+
+  // Auto-reconnect if already connected
   useEffect(() => {
-    const win = window as unknown as { ethereum?: ethers.Eip1193Provider & { on?: (event: string, cb: () => void) => void; removeListener?: (event: string, cb: () => void) => void } };
+    const win = window as unknown as EthWindow;
+    if (!win.ethereum) return;
+    const provider = new ethers.BrowserProvider(win.ethereum);
+    // Check if already authorized (no popup)
+    provider.send('eth_accounts', []).then((accounts) => {
+      if (Array.isArray(accounts) && accounts.length > 0) updateWallet(provider);
+    }).catch(() => {});
+  }, [updateWallet]);
+
+  useEffect(() => {
+    const win = window as unknown as EthWindow;
     if (!win.ethereum) return;
     const provider = new ethers.BrowserProvider(win.ethereum);
     const handleChange = () => updateWallet(provider);
@@ -90,5 +123,5 @@ export function useWallet() {
     };
   }, [updateWallet]);
 
-  return { ...state, connect, disconnect, switchToBase };
+  return { ...state, connect, disconnect, switchToBase, addAGLToWallet };
 }
