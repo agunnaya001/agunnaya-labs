@@ -14,6 +14,7 @@ const NAV = [
   { id:'leaderboard', label:'Leaderboard' },
   { id:'gallery', label:'Gallery' },
   { id:'audits', label:'Audits' },
+  { id:'earn', label:'Earn' },
   { id:'pro', label:'Pro' },
   { id:'waitlist', label:'Waitlist' },
 ];
@@ -132,10 +133,33 @@ export default function Header({ wallet, onToast }: Props) {
           <div className="wp-divider" />
           <div className="wp-row"><span className="wp-label">ETH</span><span className="wp-val">{wallet.ethBalance} ETH</span></div>
           <div className="wp-row"><span className="wp-label">AGL</span><span className="wp-val accent">{wallet.aglBalance} AGL</span></div>
+          {(() => {
+            try {
+              const bal = parseFloat((wallet.aglBalance ?? '0').replace(/,/g, ''));
+              if (bal >= 1000) return (
+                <div className="wp-row"><span className="wp-label">Status</span><span className="wp-val" style={{ color: 'var(--acid)' }}>⚡ PRO MEMBER</span></div>
+              );
+            } catch {}
+            return null;
+          })()}
           <div className="wp-divider" />
+          {(() => {
+            try {
+              const refCount = parseInt(localStorage.getItem('agl_ref_count') ?? '0', 10);
+              return (
+                <div className="wp-row">
+                  <span className="wp-label">Referrals</span>
+                  <span className="wp-val">{refCount} → {refCount * 1000} AGL</span>
+                </div>
+              );
+            } catch { return null; }
+          })()}
           <div className="wp-actions">
             <button className="btn btn-ghost" style={{ fontSize:'.6rem' }} onClick={handleAddAGL}>+ AGL to Wallet</button>
             <button className="btn btn-ghost" style={{ fontSize:'.6rem' }} onClick={wallet.switchToBase}>Switch to Base</button>
+          </div>
+          <div className="wp-actions" style={{ marginTop:6 }}>
+            <button className="btn btn-acid" style={{ flex:1, fontSize:'.6rem' }} onClick={() => { scrollTo('earn'); setPanelOpen(false); }}>Earn AGL →</button>
           </div>
           <div className="wp-actions" style={{ marginTop:6 }}>
             <button className="btn btn-ghost" style={{ flex:1, fontSize:'.6rem' }} onClick={() => { wallet.disconnect(); setPanelOpen(false); }}>Disconnect</button>

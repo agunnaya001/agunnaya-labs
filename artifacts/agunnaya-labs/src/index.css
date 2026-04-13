@@ -381,6 +381,82 @@ footer { padding:44px 48px; border-top:1px solid var(--border); display:flex; ju
 /* ── SKELETON ────────────────────────────────────────────── */
 .skel { background:var(--border); border-radius:3px; animation:pulse 1.4s ease-in-out infinite; }
 
+/* ── LEADERBOARD / NFT EMPTY STATES ────────────────────── */
+.lb-empty-state, .nft-empty-state { text-align:center; padding:64px 24px; max-width:520px; margin:0 auto; }
+
+/* ── PRO SECTION UPDATES ────────────────────────────────── */
+.pro-gate-banner { display:flex; align-items:center; gap:16px; padding:18px 24px; border:1px solid var(--border); border-radius:8px; margin-bottom:40px; background:var(--card); max-width:1200px; flex-wrap:wrap; }
+.pro-gate-banner.pro-gate-active { border-color:rgba(200,255,0,.3); background:linear-gradient(135deg,rgba(200,255,0,.04),var(--card)); }
+.pro-gate-banner.pro-gate-inactive { border-color:rgba(249,115,22,.2); }
+.pro-gate-icon { font-size:1.8rem; flex-shrink:0; }
+.pro-gate-title { font-family:var(--ff-d); font-size:1.1rem; letter-spacing:.06em; margin-bottom:2px; }
+.pro-gate-sub { font-family:var(--ff-m); font-size:.62rem; color:var(--mid); }
+.pro-badge-pill { margin-left:auto; font-family:var(--ff-m); font-size:.58rem; letter-spacing:.12em; color:var(--acid); border:1px solid rgba(200,255,0,.4); padding:5px 14px; border-radius:20px; background:rgba(200,255,0,.08); white-space:nowrap; }
+.pro-or { font-family:var(--ff-m); font-size:.58rem; color:var(--dim); margin-left:6px; }
+.pro-card-unlocked { border-color:rgba(200,255,0,.35)!important; }
+.pro-unlocked-ribbon { position:absolute; top:14px; right:-1px; background:var(--acid); color:var(--ink); font-family:var(--ff-m); font-size:.52rem; letter-spacing:.1em; padding:4px 12px; border-radius:3px 0 0 3px; }
+
+/* ── TOKEN REWARDS SECTION ──────────────────────────────── */
+.rewards-section section { position:relative; }
+.rewards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; max-width:1200px; margin-bottom:56px; }
+.reward-card { display:flex; gap:16px; align-items:flex-start; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:22px 20px; transition:border-color .25s; }
+.reward-card:hover { border-color:rgba(200,255,0,.2); }
+.reward-icon { font-size:1.6rem; flex-shrink:0; width:40px; text-align:center; }
+.reward-title { font-family:var(--ff-m); font-size:.72rem; color:var(--text); margin-bottom:5px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.reward-desc { font-family:var(--ff-m); font-size:.64rem; color:var(--mid); line-height:1.6; }
+.reward-badge { font-size:.48rem; letter-spacing:.1em; padding:2px 7px; border-radius:2px; }
+.badge-live { color:var(--green); border:1px solid rgba(34,197,94,.3); background:rgba(34,197,94,.05); }
+.badge-beta { color:var(--sky); border:1px solid rgba(0,170,255,.3); background:rgba(0,170,255,.05); }
+.badge-open { color:var(--acid); border:1px solid rgba(200,255,0,.3); background:rgba(200,255,0,.05); }
+.badge-soon { color:var(--mid); border:1px solid var(--border); }
+
+/* Rewards bottom row */
+.rewards-bottom { display:grid; grid-template-columns:1fr 380px; gap:24px; max-width:1200px; align-items:start; }
+
+/* Buy AGL card */
+.buy-agl-card { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.buy-agl-header { display:flex; align-items:center; justify-content:space-between; padding:24px 28px 20px; gap:16px; flex-wrap:wrap; border-bottom:1px solid var(--border); }
+.buy-agl-title { font-family:var(--ff-d); font-size:1.6rem; letter-spacing:.06em; margin-bottom:2px; }
+.buy-agl-sub { font-family:var(--ff-m); font-size:.58rem; color:var(--mid); letter-spacing:.04em; }
+.buy-agl-addr { text-align:right; }
+.dex-links { padding:0 28px; border-bottom:1px solid var(--border); }
+.dex-link { display:flex; align-items:center; gap:14px; padding:16px 0; border-bottom:1px solid var(--border); text-decoration:none; transition:opacity .2s; }
+.dex-link:last-child { border-bottom:none; }
+.dex-link:hover { opacity:.7; }
+.dex-icon { font-size:1.4rem; width:32px; text-align:center; flex-shrink:0; }
+.dex-name { font-family:var(--ff-m); font-size:.72rem; color:var(--text); margin-bottom:2px; }
+.dex-desc { font-family:var(--ff-m); font-size:.58rem; color:var(--dim); }
+.dex-arrow { margin-left:auto; color:var(--dim); font-size:1rem; }
+.how-to-buy { padding:24px 28px; }
+.how-steps { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.how-step { display:flex; gap:12px; }
+.how-step-num { font-family:var(--ff-d); font-size:1.8rem; color:rgba(200,255,0,.25); line-height:1; flex-shrink:0; }
+.how-step-title { font-family:var(--ff-m); font-size:.68rem; color:var(--text); margin-bottom:3px; }
+.how-step-body { font-family:var(--ff-m); font-size:.58rem; color:var(--dim); line-height:1.6; }
+
+/* Right column */
+.rewards-right { display:flex; flex-direction:column; gap:16px; }
+
+/* Referral widget */
+.referral-widget { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; }
+.referral-title { font-family:var(--ff-d); font-size:1.2rem; letter-spacing:.06em; margin-bottom:8px; }
+.referral-desc { font-family:var(--ff-m); font-size:.62rem; color:var(--mid); line-height:1.6; margin-bottom:16px; }
+.referral-stats { display:flex; gap:0; margin-bottom:16px; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.referral-stat { flex:1; text-align:center; padding:12px; }
+.referral-stat:first-child { border-right:1px solid var(--border); }
+.referral-stat-n { font-family:var(--ff-d); font-size:1.8rem; color:var(--acid); line-height:1; margin-bottom:2px; }
+.referral-stat-l { font-family:var(--ff-m); font-size:.52rem; color:var(--dim); letter-spacing:.08em; }
+.referral-link-row { display:flex; gap:8px; align-items:stretch; }
+.referral-link-box { flex:1; font-family:var(--ff-m); font-size:.52rem; color:var(--sky); background:rgba(0,170,255,.05); border:1px solid rgba(0,170,255,.2); border-radius:4px; padding:8px 10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+
+/* Tip jar */
+.tip-jar { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; }
+.tip-jar-header { display:flex; align-items:flex-start; gap:14px; margin-bottom:16px; font-size:2rem; }
+.tip-jar-title { font-family:var(--ff-d); font-size:1.1rem; letter-spacing:.06em; }
+.tip-jar-sub { font-family:var(--ff-m); font-size:.6rem; color:var(--mid); margin-top:2px; }
+.tip-amounts { display:flex; gap:8px; flex-wrap:wrap; }
+.tip-btn { font-size:.6rem!important; padding:8px 14px!important; }
+
 /* ── RESPONSIVE ──────────────────────────────────────────── */
 @media (max-width: 1024px) {
   .ai-grid, .pro-grid { grid-template-columns:1fr; }

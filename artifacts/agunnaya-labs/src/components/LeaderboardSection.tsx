@@ -1,18 +1,8 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 
 interface Player {
-  rank: number; address: string; wins: number; losses: number; rate: number;
+  rank: number; address: string; wins: number; losses: number; rate: number; volume: string;
 }
-
-const MOCK_PLAYERS: Player[] = [
-  { rank: 1, address: '0xDeF1…4e9a', wins: 47, losses: 8, rate: 85 },
-  { rank: 2, address: '0x1a2B…8c3d', wins: 39, losses: 11, rate: 78 },
-  { rank: 3, address: '0x9Fe2…2a1c', wins: 33, losses: 14, rate: 70 },
-  { rank: 4, address: '0x7Bb4…5f0e', wins: 28, losses: 17, rate: 62 },
-  { rank: 5, address: '0x4Cc3…1d2f', wins: 22, losses: 19, rate: 54 },
-  { rank: 6, address: '0x6Aa7…9e4b', wins: 18, losses: 22, rate: 45 },
-  { rank: 7, address: '0x2Ee5…3c7a', wins: 14, losses: 28, rate: 33 },
-];
 
 const PodiumCard = memo(function PodiumCard({ player, pos }: { player: Player; pos: 1|2|3 }) {
   return (
@@ -26,18 +16,44 @@ const PodiumCard = memo(function PodiumCard({ player, pos }: { player: Player; p
   );
 });
 
+function PodiumSkeleton() {
+  return (
+    <div className="lb-podium">
+      {[180, 220, 160].map((h, i) => (
+        <div key={i} style={{ height: h, background: 'var(--border)', borderRadius: 8, animation: `pulse 1.4s ease-in-out ${i * 120}ms infinite` }} />
+      ))}
+    </div>
+  );
+}
+
 export default function LeaderboardSection() {
   const [players, setPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
   const [spinning, setSpinning] = useState(false);
   const [status, setStatus] = useState('Loading…');
+  const [error, setError] = useState('');
 
   const load = useCallback(async (refresh = false) => {
     if (refresh) setSpinning(true);
     setStatus('Reading chain…');
-    await new Promise(r => setTimeout(r, refresh ? 800 : 600));
-    setPlayers(MOCK_PLAYERS);
-    setStatus(`Updated ${new Date().toLocaleTimeString()}`);
-    setSpinning(false);
+    setError('');
+    try {
+      const res = await fetch('/api/leaderboard');
+      const data = await res.json() as { ok: boolean; players: Player[] };
+      if (data.ok && data.players.length > 0) {
+        setPlayers(data.players);
+        setStatus(`Live · ${new Date().toLocaleTimeString()}`);
+      } else {
+        setPlayers([]);
+        setStatus('No battles recorded yet');
+      }
+    } catch {
+      setError('Could not load leaderboard — check your connection.');
+      setStatus('Error loading');
+    } finally {
+      setLoading(false);
+      setSpinning(false);
+    }
   }, []);
 
   useEffect(() => { load(); }, [load]);
@@ -57,7 +73,7 @@ export default function LeaderboardSection() {
           <button
             className={`lb-refresh-btn ${spinning ? 'spinning' : ''}`}
             onClick={() => load(true)}
-            disabled={spinning}
+            disabled={spinning || loading}
             aria-label="Refresh leaderboard"
           >
             ↻ Refresh
@@ -66,53 +82,69 @@ export default function LeaderboardSection() {
         </div>
       </div>
 
-      {top3.length === 3 ? (
+      {error && (
+        <div style={{ fontFamily: 'var(--ff-m)', fontSize: '.68rem', color: 'var(--red)', marginBottom: 24, padding: '12px 16px', border: '1px solid rgba(239,68,68,.2)', borderRadius: 6 }}>
+          {error}
+        </div>
+      )}
+
+      {loading ? (
+        <PodiumSkeleton />
+      ) : top3.length >= 3 ? (
         <div className="lb-podium">
           <PodiumCard player={top3[1]} pos={2} />
           <PodiumCard player={top3[0]} pos={1} />
           <PodiumCard player={top3[2]} pos={3} />
         </div>
-      ) : (
+      ) : players.length > 0 ? (
         <div className="lb-podium">
-          {[180, 220, 160].map((h, i) => (
-            <div key={i} style={{ height: h, background: 'var(--border)', borderRadius: 8, animation: 'pulse 1.4s ease-in-out infinite', animationDelay: i * 100 + 'ms' }} />
+          {players.slice(0, Math.min(3, players.length)).map((p, i) => (
+            <PodiumCard key={p.rank} player={p} pos={(i + 1) as 1|2|3} />
           ))}
+        </div>
+      ) : (
+        <div className="lb-empty-state reveal">
+          <div style={{ fontSize: '3rem', marginBottom: 16 }}>⚔️</div>
+          <div style={{ fontFamily: 'var(--ff-d)', fontSize: '1.4rem', marginBottom: 10, color: 'var(--text)' }}>NO BATTLES YET</div>
+          <p style={{ fontFamily: 'var(--ff-m)', fontSize: '.7rem', color: 'var(--mid)', maxWidth: 380, margin: '0 auto 24px' }}>
+            The Arena is live on Base mainnet — be the first to battle and claim the top spot.
+          </p>
+          <a href="https://basescan.org/address/0xF6fc2B6a306B626548ca9dF25B31a22D0f8971CF" target="_blank" rel="noopener noreferrer">
+            <button className="btn btn-acid">View Contract on BaseScan ↗</button>
+          </a>
         </div>
       )}
 
-      <div style={{ overflowX: 'auto' }} className="reveal">
-        <table className="lb-table" style={{ minWidth: 480 }}>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Champion</th>
-              <th>Wins</th>
-              <th>Losses</th>
-              <th>Win Rate</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rest.length > 0 ? rest.map(p => (
-              <tr key={p.rank}>
-                <td><div className={`lb-rank-cell ${p.rank <= 3 ? 'top3' : ''}`}>{p.rank}</div></td>
-                <td><span className="lb-addr">{p.address}</span></td>
-                <td><span className="lb-wins">{p.wins}</span></td>
-                <td><span className="lb-losses">{p.losses}</span></td>
-                <td>
-                  <div className="lb-rate-bar">
-                    <div className="lb-bar-track">
-                      <div className="lb-bar-fill" style={{ width: p.rate + '%' }} />
-                    </div>
-                    <span className="lb-rate-pct">{p.rate}%</span>
-                  </div>
-                </td>
+      {rest.length > 0 && (
+        <div style={{ overflowX: 'auto' }} className="reveal">
+          <table className="lb-table" style={{ minWidth: 480 }}>
+            <thead>
+              <tr>
+                <th>#</th><th>Champion</th><th>Wins</th><th>Losses</th><th>Win Rate</th><th>Volume</th>
               </tr>
-            )) : (
-              <tr><td colSpan={5}><div className="lb-empty">Loading leaderboard data…</div></td></tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {rest.map(p => (
+                <tr key={p.rank}>
+                  <td><div className={`lb-rank-cell ${p.rank <= 3 ? 'top3' : ''}`}>{p.rank}</div></td>
+                  <td>
+                    <a href={`https://basescan.org/address/${p.address}`} target="_blank" rel="noopener noreferrer" className="lb-addr">{p.address}</a>
+                  </td>
+                  <td><span className="lb-wins">{p.wins}</span></td>
+                  <td><span className="lb-losses">{p.losses}</span></td>
+                  <td>
+                    <div className="lb-rate-bar">
+                      <div className="lb-bar-track"><div className="lb-bar-fill" style={{ width: p.rate + '%' }} /></div>
+                      <span className="lb-rate-pct">{p.rate}%</span>
+                    </div>
+                  </td>
+                  <td><span style={{ fontFamily: 'var(--ff-m)', fontSize: '.65rem', color: 'var(--mid)' }}>{p.volume} AT</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </section>
   );
 }
