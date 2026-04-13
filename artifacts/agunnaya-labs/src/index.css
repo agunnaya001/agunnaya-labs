@@ -337,6 +337,47 @@ footer { padding:44px 48px; border-top:1px solid var(--border); display:flex; ju
 .footer-links a:hover { color:var(--text); }
 .footer-copy { font-family:var(--ff-m); font-size:.58rem; color:var(--dim); }
 
+/* ── NFT GALLERY ─────────────────────────────────────────── */
+.nft-controls { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:12px; }
+.nft-filters { display:flex; flex-wrap:wrap; gap:8px; }
+.nft-filter-btn { font-family:var(--ff-m); font-size:.6rem; letter-spacing:.06em; color:var(--mid); border:1px solid var(--border); padding:7px 14px; border-radius:3px; cursor:pointer; transition:all .2s; background:transparent; }
+.nft-filter-btn:hover { color:var(--text); border-color:rgba(255,255,255,.18); }
+.nft-filter-btn.active { color:var(--acid); border-color:rgba(200,255,0,.35); background:rgba(200,255,0,.05); }
+.nft-sort-row { display:flex; align-items:center; gap:12px; }
+.nft-count { font-family:var(--ff-m); font-size:.6rem; color:var(--dim); }
+.nft-sort { font-family:var(--ff-m); font-size:.6rem; color:var(--mid); background:var(--card); border:1px solid var(--border); padding:6px 10px; border-radius:3px; cursor:pointer; outline:none; }
+.nft-sort:focus { border-color:rgba(200,255,0,.3); color:var(--text); }
+.nft-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px; max-width:1200px; }
+.nft-card { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; cursor:pointer; transition:border-color .25s,transform .25s,box-shadow .25s; }
+.nft-card:hover, .nft-card:focus-visible { border-color:rgba(200,255,0,.3); transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,.3); outline:none; }
+.nft-art { aspect-ratio:1; background:linear-gradient(135deg,var(--ink),#0d1526); display:flex; align-items:center; justify-content:center; font-size:3.8rem; }
+.nft-info { padding:14px; }
+.nft-name { font-family:var(--ff-d); font-size:1.2rem; letter-spacing:.04em; margin-bottom:2px; }
+.nft-id { font-family:var(--ff-m); font-size:.54rem; color:var(--dim); letter-spacing:.06em; margin-bottom:9px; }
+.nft-tags { display:flex; flex-wrap:wrap; gap:4px; }
+.nft-tag { font-family:var(--ff-m); font-size:.52rem; color:var(--mid); border:1px solid var(--border); padding:3px 7px; border-radius:2px; }
+/* NFT Modal */
+.nft-modal-bg { display:flex; position:fixed; inset:0; z-index:400; background:rgba(4,7,14,.92); backdrop-filter:blur(14px); align-items:center; justify-content:center; padding:24px; }
+.nft-modal { position:relative; max-width:540px; width:100%; background:var(--card); border:1px solid rgba(200,255,0,.18); border-radius:12px; overflow:hidden; animation:fadeDown .22s ease; }
+.nft-modal-close { position:absolute; top:12px; right:12px; z-index:1; background:rgba(0,0,0,.5); border:1px solid var(--border); color:var(--mid); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.nft-modal-close:hover { color:var(--text); border-color:rgba(255,255,255,.2); }
+.nft-modal-art { aspect-ratio:1.6; width:100%; background:linear-gradient(135deg,var(--ink),#0d1526); display:flex; align-items:center; justify-content:center; font-size:5rem; max-height:260px; }
+.nft-modal-body { padding:24px 28px 28px; }
+.nft-modal-name { font-family:var(--ff-d); font-size:2rem; letter-spacing:.04em; margin-bottom:4px; }
+.nft-modal-id { font-family:var(--ff-m); font-size:.6rem; color:var(--mid); letter-spacing:.06em; margin-bottom:20px; }
+.nft-modal-attrs { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:20px; }
+.nft-attr { background:rgba(200,255,0,.03); border:1px solid rgba(200,255,0,.1); border-radius:4px; padding:10px 12px; }
+.nft-attr-key { font-family:var(--ff-m); font-size:.5rem; color:var(--mid); letter-spacing:.12em; text-transform:uppercase; margin-bottom:3px; }
+.nft-attr-val { font-family:var(--ff-m); font-size:.72rem; color:var(--text); }
+.nft-modal-actions { display:flex; gap:10px; }
+
+/* ── AUDIT FILTER BAR ───────────────────────────────────── */
+.audit-filter-bar { display:flex; gap:6px; padding:12px 16px; background:rgba(0,0,0,.2); border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.audit-filter-btn { font-family:var(--ff-m); font-size:.55rem; letter-spacing:.08em; padding:4px 10px; border-radius:2px; cursor:pointer; transition:all .18s; background:transparent; border:1px solid var(--border); color:var(--dim); display:inline-flex; align-items:center; gap:5px; }
+.audit-filter-btn:hover { color:var(--text); border-color:rgba(255,255,255,.18); }
+.audit-filter-btn.active { color:var(--text)!important; background:rgba(255,255,255,.07)!important; border-color:rgba(255,255,255,.2)!important; }
+.audit-filter-count { font-family:var(--ff-d); font-size:.75rem; line-height:1; }
+
 /* ── SKELETON ────────────────────────────────────────────── */
 .skel { background:var(--border); border-radius:3px; animation:pulse 1.4s ease-in-out infinite; }
 

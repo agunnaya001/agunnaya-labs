@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "xcA8GeknN_V7JbmHnR2h0"
+uri = "file://artifacts/agunnaya-labs/README.md"
+type = "text"
+title = "README.md — Agunnaya Labs GitHub Repository"

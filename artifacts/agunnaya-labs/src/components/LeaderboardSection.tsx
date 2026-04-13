@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 
 interface Player {
   rank: number; address: string; wins: number; losses: number; rate: number;
@@ -14,10 +14,9 @@ const MOCK_PLAYERS: Player[] = [
   { rank: 7, address: '0x2Ee5…3c7a', wins: 14, losses: 28, rate: 33 },
 ];
 
-function PodiumCard({ player, pos }: { player: Player; pos: 1|2|3 }) {
-  const rankClass = `rank-${pos}`;
+const PodiumCard = memo(function PodiumCard({ player, pos }: { player: Player; pos: 1|2|3 }) {
   return (
-    <div className={`podium-card ${rankClass}`}>
+    <div className={`podium-card rank-${pos}`}>
       {pos === 1 && <span className="podium-crown">👑</span>}
       <div className="podium-rank">{pos === 1 ? '🥇' : pos === 2 ? '🥈' : '🥉'}</div>
       <div className="podium-addr">{player.address}</div>
@@ -25,7 +24,7 @@ function PodiumCard({ player, pos }: { player: Player; pos: 1|2|3 }) {
       <div className="podium-wl">{player.wins}W · {player.losses}L</div>
     </div>
   );
-}
+});
 
 export default function LeaderboardSection() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -35,10 +34,10 @@ export default function LeaderboardSection() {
   const load = useCallback(async (refresh = false) => {
     if (refresh) setSpinning(true);
     setStatus('Reading chain…');
-    await new Promise(r => setTimeout(r, 600));
+    await new Promise(r => setTimeout(r, refresh ? 800 : 600));
     setPlayers(MOCK_PLAYERS);
     setStatus(`Updated ${new Date().toLocaleTimeString()}`);
-    if (refresh) setSpinning(false);
+    setSpinning(false);
   }, []);
 
   useEffect(() => { load(); }, [load]);
@@ -55,7 +54,14 @@ export default function LeaderboardSection() {
         </div>
         <div className="lb-meta">
           <span>{status}</span>
-          <button className={`lb-refresh-btn ${spinning ? 'spinning' : ''}`} onClick={() => load(true)}>↻ Refresh</button>
+          <button
+            className={`lb-refresh-btn ${spinning ? 'spinning' : ''}`}
+            onClick={() => load(true)}
+            disabled={spinning}
+            aria-label="Refresh leaderboard"
+          >
+            ↻ Refresh
+          </button>
           <span>ArenaBattle Contract · Base Mainnet</span>
         </div>
       </div>
@@ -68,35 +74,45 @@ export default function LeaderboardSection() {
         </div>
       ) : (
         <div className="lb-podium">
-          {[0,1,2].map(i => (
-            <div key={i} style={{ height: i===1?220:i===0?180:160, background:'var(--border)', borderRadius:8, animation:'pulse 1.4s ease-in-out infinite' }} />
+          {[180, 220, 160].map((h, i) => (
+            <div key={i} style={{ height: h, background: 'var(--border)', borderRadius: 8, animation: 'pulse 1.4s ease-in-out infinite', animationDelay: i * 100 + 'ms' }} />
           ))}
         </div>
       )}
 
-      <table className="lb-table reveal">
-        <thead>
-          <tr><th>#</th><th>Champion</th><th>Wins</th><th>Losses</th><th>Win Rate</th></tr>
-        </thead>
-        <tbody>
-          {rest.length > 0 ? rest.map(p => (
-            <tr key={p.rank}>
-              <td><div className={`lb-rank-cell ${p.rank <= 3 ? 'top3' : ''}`}>{p.rank}</div></td>
-              <td><span className="lb-addr">{p.address}</span></td>
-              <td><span className="lb-wins">{p.wins}</span></td>
-              <td><span className="lb-losses">{p.losses}</span></td>
-              <td>
-                <div className="lb-rate-bar">
-                  <div className="lb-bar-track"><div className="lb-bar-fill" style={{ width: p.rate + '%' }} /></div>
-                  <span className="lb-rate-pct">{p.rate}%</span>
-                </div>
-              </td>
+      <div style={{ overflowX: 'auto' }} className="reveal">
+        <table className="lb-table" style={{ minWidth: 480 }}>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Champion</th>
+              <th>Wins</th>
+              <th>Losses</th>
+              <th>Win Rate</th>
             </tr>
-          )) : (
-            <tr><td colSpan={5}><div className="lb-empty">Loading leaderboard…</div></td></tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rest.length > 0 ? rest.map(p => (
+              <tr key={p.rank}>
+                <td><div className={`lb-rank-cell ${p.rank <= 3 ? 'top3' : ''}`}>{p.rank}</div></td>
+                <td><span className="lb-addr">{p.address}</span></td>
+                <td><span className="lb-wins">{p.wins}</span></td>
+                <td><span className="lb-losses">{p.losses}</span></td>
+                <td>
+                  <div className="lb-rate-bar">
+                    <div className="lb-bar-track">
+                      <div className="lb-bar-fill" style={{ width: p.rate + '%' }} />
+                    </div>
+                    <span className="lb-rate-pct">{p.rate}%</span>
+                  </div>
+                </td>
+              </tr>
+            )) : (
+              <tr><td colSpan={5}><div className="lb-empty">Loading leaderboard data…</div></td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }

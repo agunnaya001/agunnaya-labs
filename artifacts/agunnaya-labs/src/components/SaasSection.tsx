@@ -1,10 +1,12 @@
+import { memo } from 'react';
+
 const CARDS = [
-  { icon: '📊', title: 'Analytics Engine', desc: 'On-chain event indexing and wallet analytics across Base mainnet.', pill: 'COMING SOON', delay: 0 },
-  { icon: '🤖', title: 'AI Automation', desc: 'Trigger-based contract interactions driven by configurable AI conditions.', pill: 'IN DEVELOPMENT', delay: 100 },
-  { icon: '🔐', title: 'Security API', desc: 'REST API for programmatic smart contract auditing. Integrate into your CI/CD pipeline.', pill: 'BETA', delay: 200 },
+  { icon: '📊', title: 'Analytics Engine', desc: 'On-chain event indexing and wallet analytics across Base mainnet. Track AGL holders, arena battles, and NFT transfers in real time.', pill: 'COMING SOON', delay: 0 },
+  { icon: '🤖', title: 'AI Automation', desc: 'Trigger-based contract interactions driven by configurable AI conditions. Set rules, let the bot execute.', pill: 'IN DEVELOPMENT', delay: 100 },
+  { icon: '🔐', title: 'Security API', desc: 'REST API for programmatic smart contract auditing. Integrate vulnerability scanning directly into your CI/CD pipeline.', pill: 'BETA', delay: 200 },
 ];
 
-export default function SaasSection() {
+const SaasSection = memo(function SaasSection() {
   return (
     <section id="saas" className="z">
       <div className="sec-label reveal">SaaS Infrastructure</div>
@@ -22,4 +24,6 @@ export default function SaasSection() {
       </div>
     </section>
   );
-}
+});
+
+export default SaasSection;
