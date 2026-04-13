@@ -3,7 +3,6 @@ modules = ["nodejs-24"]
 [deployment]
 router = "application"
 deploymentTarget = "autoscale"
-run = ["sh", "-c", "PORT=3000 BASE_PATH=/ pnpm --filter @workspace/agunnaya-labs run dev"]
 
 [deployment.postBuild]
 args = ["pnpm", "store", "prune"]
@@ -33,17 +32,9 @@ localPort = 8082
 externalPort = 3002
 
 [[ports]]
-localPort = 8083
-externalPort = 3001
-
-[[ports]]
 localPort = 25802
 externalPort = 3000
 
 [[ports]]
 localPort = 25803
 externalPort = 3003
-
-[[ports]]
-localPort = 25804
-externalPort = 4200
