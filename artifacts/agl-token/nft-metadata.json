@@ -1,0 +1,111 @@
+{
+  "uploadedAt": "2026-04-13T18:15:41.695Z",
+  "contractURI": "ipfs://QmeKdgwZ8fi13JgrztoduN1fn5Hq59ZTme63DPtzgXcJ1f",
+  "contractURIGateway": "https://gateway.pinata.cloud/ipfs/QmeKdgwZ8fi13JgrztoduN1fn5Hq59ZTme63DPtzgXcJ1f",
+  "nfts": [
+    {
+      "id": 1,
+      "name": "Shadow Cipher",
+      "rarity": "Legendary",
+      "power": 98,
+      "element": "Void",
+      "imageHash": "QmeATwftwjQKRaEAxPWhNQFawgHsXhXJ3t5iGhdNDwmYs3",
+      "imageURI": "ipfs://QmeATwftwjQKRaEAxPWhNQFawgHsXhXJ3t5iGhdNDwmYs3",
+      "metaHash": "QmSwipz6VTPu5RTVYwC37xHj4pyLvXDT7urTFz5XYXn2dZ",
+      "tokenURI": "ipfs://QmSwipz6VTPu5RTVYwC37xHj4pyLvXDT7urTFz5XYXn2dZ",
+      "openSeaURL": "https://opensea.io/assets/base/<CONTRACT>/1",
+      "ipfsGateway": "https://gateway.pinata.cloud/ipfs/QmSwipz6VTPu5RTVYwC37xHj4pyLvXDT7urTFz5XYXn2dZ"
+    },
+    {
+      "id": 2,
+      "name": "Iron Sentinel",
+      "rarity": "Epic",
+      "power": 82,
+      "element": "Metal",
+      "imageHash": "QmTkdxdsKjhtr6uLmqad4ZEzJiWkJbpxm6M6ojr2MuryYT",
+      "imageURI": "ipfs://QmTkdxdsKjhtr6uLmqad4ZEzJiWkJbpxm6M6ojr2MuryYT",
+      "metaHash": "QmY8VfMd8vfhw8qKRK9DcEQwVfeMaGtJaGhwrYS4FKfBs5",
+      "tokenURI": "ipfs://QmY8VfMd8vfhw8qKRK9DcEQwVfeMaGtJaGhwrYS4FKfBs5",
+      "openSeaURL": "https://opensea.io/assets/base/<CONTRACT>/2",
+      "ipfsGateway": "https://gateway.pinata.cloud/ipfs/QmY8VfMd8vfhw8qKRK9DcEQwVfeMaGtJaGhwrYS4FKfBs5"
+    },
+    {
+      "id": 3,
+      "name": "Storm Seeker",
+      "rarity": "Rare",
+      "power": 74,
+      "element": "Lightning",
+      "imageHash": "QmPPHuKJrYGaMe7TyVrPCxEhjE4JTK5q1nPypHavn7bXX6",
+      "imageURI": "ipfs://QmPPHuKJrYGaMe7TyVrPCxEhjE4JTK5q1nPypHavn7bXX6",
+      "metaHash": "QmQcugz1ATJ9uZwDfaeGbaf7E1ci6QWppcThCS6W45aSGg",
+      "tokenURI": "ipfs://QmQcugz1ATJ9uZwDfaeGbaf7E1ci6QWppcThCS6W45aSGg",
+      "openSeaURL": "https://opensea.io/assets/base/<CONTRACT>/3",
+      "ipfsGateway": "https://gateway.pinata.cloud/ipfs/QmQcugz1ATJ9uZwDfaeGbaf7E1ci6QWppcThCS6W45aSGg"
+    },
+    {
+      "id": 4,
+      "name": "Flame Warden",
+      "rarity": "Epic",
+      "power": 86,
+      "element": "Fire",
+      "imageHash": "QmZGSByitgqskXQ7dzgpmaMMHdMKTrSwmM9CHicFg2CeeV",
+      "imageURI": "ipfs://QmZGSByitgqskXQ7dzgpmaMMHdMKTrSwmM9CHicFg2CeeV",
+      "metaHash": "QmWcRkkJwjFdctUZtrHBg4QTCD6R8xkVR4NP8WBnLxcq2G",
+      "tokenURI": "ipfs://QmWcRkkJwjFdctUZtrHBg4QTCD6R8xkVR4NP8WBnLxcq2G",
+      "openSeaURL": "https://opensea.io/assets/base/<CONTRACT>/4",
+      "ipfsGateway": "https://gateway.pinata.cloud/ipfs/QmWcRkkJwjFdctUZtrHBg4QTCD6R8xkVR4NP8WBnLxcq2G"
+    },
+    {
+      "id": 5,
+      "name": "Frost Knight",
+      "rarity": "Rare",
+      "power": 71,
+      "element": "Ice",
+      "imageHash": "QmWCLrsapBxLTiYJnUejWJrzKkehHFDPoC9az6UctfDkAP",
+      "imageURI": "ipfs://QmWCLrsapBxLTiYJnUejWJrzKkehHFDPoC9az6UctfDkAP",
+      "metaHash": "QmXcUhcvLvvoFhSYqfxiHsxFFFFy6zdrhJBgYmgDCbWb1G",
+      "tokenURI": "ipfs://QmXcUhcvLvvoFhSYqfxiHsxFFFFy6zdrhJBgYmgDCbWb1G",
+      "openSeaURL": "https://opensea.io/assets/base/<CONTRACT>/5",
+      "ipfsGateway": "https://gateway.pinata.cloud/ipfs/QmXcUhcvLvvoFhSYqfxiHsxFFFFy6zdrhJBgYmgDCbWb1G"
+    },
+    {
+      "id": 6,
+      "name": "Neon Phantom",
+      "rarity": "Legendary",
+      "power": 95,
+      "element": "Cyber",
+      "imageHash": "QmQQz1FNxVZVjAYRXSb6BLLnU9KLoVVefoYcbwE4r6QKv2",
+      "imageURI": "ipfs://QmQQz1FNxVZVjAYRXSb6BLLnU9KLoVVefoYcbwE4r6QKv2",
+      "metaHash": "QmY5rfgnvDFrNCY4897aLtzwxJkHnkQCfNQfxKQtFqJmiT",
+      "tokenURI": "ipfs://QmY5rfgnvDFrNCY4897aLtzwxJkHnkQCfNQfxKQtFqJmiT",
+      "openSeaURL": "https://opensea.io/assets/base/<CONTRACT>/6",
+      "ipfsGateway": "https://gateway.pinata.cloud/ipfs/QmY5rfgnvDFrNCY4897aLtzwxJkHnkQCfNQfxKQtFqJmiT"
+    },
+    {
+      "id": 7,
+      "name": "Arc Breaker",
+      "rarity": "Common",
+      "power": 55,
+      "element": "Thunder",
+      "imageHash": "QmQNC2c9FGUyCQzVNR1fRk3XDkYmgqhWDCb4azrQ7dsvyp",
+      "imageURI": "ipfs://QmQNC2c9FGUyCQzVNR1fRk3XDkYmgqhWDCb4azrQ7dsvyp",
+      "metaHash": "QmYguZeqqVp8RaWuKeqgcDSW5uTRJCTWatRbQ3dnpQvvLW",
+      "tokenURI": "ipfs://QmYguZeqqVp8RaWuKeqgcDSW5uTRJCTWatRbQ3dnpQvvLW",
+      "openSeaURL": "https://opensea.io/assets/base/<CONTRACT>/7",
+      "ipfsGateway": "https://gateway.pinata.cloud/ipfs/QmYguZeqqVp8RaWuKeqgcDSW5uTRJCTWatRbQ3dnpQvvLW"
+    },
+    {
+      "id": 8,
+      "name": "Terra Golem",
+      "rarity": "Rare",
+      "power": 68,
+      "element": "Earth",
+      "imageHash": "Qmc8U1qspgBMcwtdjCeJAJrgYxHSK95BUVmoDtLdkyNzTk",
+      "imageURI": "ipfs://Qmc8U1qspgBMcwtdjCeJAJrgYxHSK95BUVmoDtLdkyNzTk",
+      "metaHash": "QmPxhPJzxfrNcryHRjjgXrwZHy2C81dgRYT2HB97zvSr5m",
+      "tokenURI": "ipfs://QmPxhPJzxfrNcryHRjjgXrwZHy2C81dgRYT2HB97zvSr5m",
+      "openSeaURL": "https://opensea.io/assets/base/<CONTRACT>/8",
+      "ipfsGateway": "https://gateway.pinata.cloud/ipfs/QmPxhPJzxfrNcryHRjjgXrwZHy2C81dgRYT2HB97zvSr5m"
+    }
+  ]
+}

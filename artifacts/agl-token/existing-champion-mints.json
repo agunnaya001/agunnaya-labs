@@ -1,0 +1,30 @@
+{
+  "contract": "0x68f08b005b09B0F7D07E1c0B5CDe18E43CE2486A",
+  "mintedAt": "2026-04-13T18:17:30.450Z",
+  "mints": [
+    {
+      "tokenId": 5,
+      "rarity": "Legendary",
+      "attack": "98",
+      "defense": "90",
+      "txHash": "0xdc94a12a7949fe117137af6a4a650634e1ec91edc263662bd4b545071a4cc787",
+      "blockNumber": 44657450,
+      "gasUsed": "116211",
+      "openSeaURL": "https://opensea.io/assets/base/0x68f08b005b09B0F7D07E1c0B5CDe18E43CE2486A/5",
+      "baseScanTx": "https://basescan.org/tx/0xdc94a12a7949fe117137af6a4a650634e1ec91edc263662bd4b545071a4cc787",
+      "baseScanToken": "https://basescan.org/token/0x68f08b005b09B0F7D07E1c0B5CDe18E43CE2486A?a=5"
+    },
+    {
+      "tokenId": 6,
+      "rarity": "Epic",
+      "attack": "86",
+      "defense": "78",
+      "txHash": "0xdf00343aa5092717f1c9aeeb949c25bffbf66ec702854bdaaade56048b16263e",
+      "blockNumber": 44657451,
+      "gasUsed": "116211",
+      "openSeaURL": "https://opensea.io/assets/base/0x68f08b005b09B0F7D07E1c0B5CDe18E43CE2486A/6",
+      "baseScanTx": "https://basescan.org/tx/0xdf00343aa5092717f1c9aeeb949c25bffbf66ec702854bdaaade56048b16263e",
+      "baseScanToken": "https://basescan.org/token/0x68f08b005b09B0F7D07E1c0B5CDe18E43CE2486A?a=6"
+    }
+  ]
+}

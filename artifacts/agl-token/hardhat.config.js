@@ -1,4 +1,5 @@
-require("@nomicfoundation/hardhat-toolbox");
+require("@nomicfoundation/hardhat-ethers");
+require("@nomicfoundation/hardhat-verify");
 require("dotenv").config();
 
 const PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY || "0x0000000000000000000000000000000000000000000000000000000000000001";
@@ -7,12 +8,13 @@ const BASESCAN_API_KEY = process.env.BASESCAN_API_KEY || "";
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
-    version: "0.8.20",
+    version: "0.8.28",
     settings: {
       optimizer: {
         enabled: true,
         runs: 200,
       },
+      evmVersion: "cancun",
     },
   },
   networks: {
@@ -25,7 +27,7 @@ module.exports = {
       // maxPriorityFeePerGas: 0.001 gwei (minimal tip)
       maxFeePerGas: 15000000,        // 0.015 gwei in wei
       maxPriorityFeePerGas: 1000000, // 0.001 gwei in wei
-      gas: 800000,                   // explicit gas limit — avoids over-estimation
+      gas: 4000000,                  // enough for ERC-721 deployment
     },
     "base-sepolia": {
       url: "https://sepolia.base.org",
