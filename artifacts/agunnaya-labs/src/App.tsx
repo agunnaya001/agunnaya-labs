@@ -21,6 +21,7 @@ const ProSection         = lazy(() => import('./components/ProSection'));
 const TokenRewardsSection= lazy(() => import('./components/TokenRewardsSection'));
 const SaasSection        = lazy(() => import('./components/SaasSection'));
 const WaitlistSection    = lazy(() => import('./components/WaitlistSection'));
+const AdminPanel         = lazy(() => import('./components/AdminPanel'));
 const SiteFooter         = lazy(() => import('./components/SiteFooter'));
 
 function SectionFallback() {
@@ -96,6 +97,8 @@ function AppInner() {
         <Section><SaasSection /></Section>
         <hr className="rule z" />
         <Section><WaitlistSection /></Section>
+        <hr className="rule z" />
+        <Section><AdminPanel /></Section>
       </main>
 
       <Section><SiteFooter /></Section>

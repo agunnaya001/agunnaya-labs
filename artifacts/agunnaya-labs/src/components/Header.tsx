@@ -17,6 +17,7 @@ const NAV = [
   { id:'earn', label:'Earn' },
   { id:'pro', label:'Pro' },
   { id:'waitlist', label:'Waitlist' },
+  { id:'admin', label:'Admin' },
 ];
 
 export default function Header({ wallet, onToast }: Props) {
